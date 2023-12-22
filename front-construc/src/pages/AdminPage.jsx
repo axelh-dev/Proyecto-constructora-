@@ -23,7 +23,9 @@ const AdminPage = (props) => {
   const [nombreMuni, setNombreMuni] = useState("");
   const [nombreUsuario, setNombreUsuario] = useState("");
   const [contrasenaUsuario, setContrasenaUsuario] = useState("");
-
+  const [selectedMunicipioId, setSelectedMunicipioId] = useState("");
+  const role_id_fija = 2;
+  
   useEffect(() => {
     const fetchMunicipalidades = async () => {
       try {
@@ -76,13 +78,39 @@ const AdminPage = (props) => {
     }
   };
 
-  const handleGuardarUser = () => {
-    setNombreMuni("");
-    setNombreUsuario("");
-    setContrasenaUsuario("");
-    setSelectedMunicipio("");
+  const handleGuardarUser = async () => {
+    try {
+      if (!nombreUsuario.trim() || !contrasenaUsuario.trim() || !selectedMunicipioId || !role_id_fija) {
+        console.log("Los campos nombreUsuario, contrasenaUsuario, selectedMunicipioId o role_id_fija están vacíos");
+        return;
+      }
+  
+      const endPoint = "http://127.0.0.1:8000/api/register/";
 
-    handleCloseModal();
+      const postData = {
+        username: nombreUsuario,
+        password: contrasenaUsuario,
+        munici_id: selectedMunicipioId,
+        role_id: role_id_fija, 
+      };
+      const response = await axios.post(endPoint, postData);
+  
+      if (response.status === 201) {
+        console.log("Usuario creado exitosamente");
+      } else {
+        console.error(
+          "Error al crear el usuario. Estado de la respuesta:",
+          response.status
+        );
+      }
+    } catch (error) {
+      console.error("Error en la solicitud POST:", error.message);
+    } finally {
+      // Limpia los campos después de la solicitud, independientemente de si tiene éxito o falla
+      setNombreUsuario("");
+      setContrasenaUsuario("");
+      setSelectedMunicipio("");
+    }
   };
 
   return (
@@ -208,6 +236,8 @@ const AdminPage = (props) => {
                 className="form-control"
                 id="nombreUsuario"
                 placeholder="Ingrese el nombre del usuario"
+                value={nombreUsuario}
+                onChange={(e) => setNombreUsuario(e.target.value)}
               />
             </div>
             <div className="mb-3">
@@ -219,6 +249,8 @@ const AdminPage = (props) => {
                 className="form-control"
                 id="contrasenaUsuario"
                 placeholder="Ingrese la contraseña del usuario"
+                value={contrasenaUsuario}
+                onChange={(e) => setContrasenaUsuario(e.target.value)}
               />
             </div>
 
@@ -230,7 +262,11 @@ const AdminPage = (props) => {
                 className="form-select"
                 id="selectMunicipalidad"
                 value={selectedMunicipio}
-                onChange={(e) => setSelectedMunicipio(e.target.value)}
+                onChange={(e) => {
+                  const selectedMuniId = municipalidades.find((muni) => muni.name === e.target.value)?.munici_id;
+                  setSelectedMunicipioId(selectedMuniId || "");
+                  setSelectedMunicipio(e.target.value);
+                }}
               >
                 <option value="" disabled>
                   Seleccionar una municipalidad
