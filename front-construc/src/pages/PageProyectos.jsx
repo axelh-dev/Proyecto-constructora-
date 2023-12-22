@@ -41,6 +41,7 @@ const PageProyectos = (props) => {
       console.error("Error al obtener la lista de proyectos", error);
     }
   };
+
   const handleCloseModal = () => {
     setShowModal(false);
   };
@@ -57,10 +58,11 @@ const PageProyectos = (props) => {
 
       if (response.status === 201) {
         console.log("Proyecto creado exitosamente");
-        setProyectos((prevProyectos) => [
-          ...prevProyectos,
-          response.data,
-        ]);
+        setProyectos((prevProyectos) => {
+          const newArray = Array.isArray(prevProyectos) ? [...prevProyectos] : [];
+          newArray.push(response.data);
+          return newArray;
+        });
       } else {
         console.error(
           "Error al crear el proyecto. Estado de la respuesta:",
@@ -76,7 +78,6 @@ const PageProyectos = (props) => {
       setShowModal(false);
     }
   };
-
   return (
     <>
       <Navbar expand="md" bg="light" data-bs-theme="light">
@@ -124,7 +125,7 @@ const PageProyectos = (props) => {
         <div className="Titulo">
           <p>LISTA DE PROYECTOS</p>
           <div className="proyectos-container">
-            {proyectos &&
+            {proyectos && proyectos.length > 0 ? (
               proyectos.map((proyecto) => (
                 <div key={proyecto.project_id} className="proyecto-card border">
                   <img
@@ -137,7 +138,6 @@ const PageProyectos = (props) => {
                   <p>Nombre: {proyecto.name}</p>
                   <p>NOG: {proyecto.nog}</p>
                   <p>Fecha: {proyecto.date}</p>
-
                   <button
                     type="button"
                     className="btn btn-primary"
@@ -157,19 +157,13 @@ const PageProyectos = (props) => {
                     Ir a la Proyecto
                   </button>
                 </div>
-              ))}
+              ))
+            ) : (
+              <p>No hay proyectos disponibles</p>
+            )}
           </div>
         </div>
       </div>
-
-      <div className="Datosesquina">
-        <p style={{ margin: 0 }}>CONSTRUCTORA LA UNION</p>
-        <p style={{ margin: "0 auto", textAlign: "center" }}>
-          KM. 72.5, RUTA AL ATLANTICO ALDEA CASAS VIEJAS GUASTATOYA,
-        </p>
-        <p style={{ margin: 0 }}>EL PROGRESO TEL. 3091-9731</p>
-      </div>
-
       <Modal show={showModal} onHide={handleCloseModal} centered>
         <Modal.Header closeButton>
           <Modal.Title className="VentanaEmer1">Nuevo Proyecto</Modal.Title>
@@ -231,3 +225,4 @@ const PageProyectos = (props) => {
 };
 
 export default PageProyectos;
+
