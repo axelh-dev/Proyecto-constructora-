@@ -1,0 +1,120 @@
+                                 // Estilos Para Panel Admin y User
+
+// Personaliza los colores del Navbar
+$color-bg: #1877f2;
+$color-text: #65676b;
+$color-link: green;
+$color-link-hover: black;
+
+                              // Estilos personalizados para el Navbar
+.navbar-custom {
+  background-color: $color-bg;
+  height: 100px;
+}
+
+.navbar-custom .navbar-brand,
+.navbar-custom .navbar-nav .nav-link {
+  color: $color-text;
+}
+
+.navbar-custom .navbar-nav .nav-link:hover {
+  color: $color-link-hover;
+}
+
+.text-capitalize{
+  text-decoration: none;
+}
+                                // Estilos para la imagen del logo
+.logoImage {
+  width: 150px; /* Ajusta el ancho según tus necesidades */
+  height: 100px; /* Ajusta la altura según tus necesidades */
+}
+
+                                //Estilos para la info empresa
+.content-pro{
+  padding: 1.4rem 1.4rem 0 1.4rem;
+}
+.Datosesquina {
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  margin: 0;
+  color: black; /* Ajusta el color según tus necesidades */
+  text-align: right;
+  font-size: 12px; /* Ajusta el tamaño de la fuente según tus necesidades */
+}
+
+                                //Estilo para titulos
+.Titulo {
+  position: relative;
+  top: 0px;
+  margin: 10px;
+  color: black;
+  text-align: left;
+  font-size: 1.2rem;
+  z-index: 1;
+  font-weight: 600;
+
+  @media (max-width: 768px) {
+    /* Estilos para pantallas más pequeñas */
+    top: 0px;
+    font-size: 15px;
+  }
+
+  @media (max-width: 576px) {
+    /* Estilos para pantallas aún más pequeñas */
+    top: 0px;
+    font-size: 15px;
+  }
+}
+
+                              // Estilos para el botón "Agregar Proyecto"
+.AgregarProyectoButton {
+  margin-left: 10px; // Ajusta el margen según tus necesidades
+  background-color: #f0f2f5; // Color de fondo del botón (verde)
+  border-color: black; // Color del borde del botón (verde)
+  color: black; // Color del texto del botón (blanco)
+  font-weight: 600;
+
+  &:hover {
+    background-color: #218838; // Color de fondo al pasar el ratón (verde oscuro)
+    border-color: #1e7e34; // Color del borde al pasar el ratón (verde más oscuro)
+  }
+}
+                                 // Estilos para el botón "Cerrar Sesión"
+.CerrarSesionButton {
+  margin-left: 10px; // Ajusta el margen según tus necesidades
+  background-color: #f0f2f5; // Color de fondo del botón (rojo)
+  border-color: black; // Color del borde del botón (rojo)
+  color: black; // Color del texto del botón (blanco)
+  font-weight: 600;
+
+  &:hover {
+    background-color: #c82333; // Color de fondo al pasar el ratón (rojo oscuro)
+    border-color: #bd2130; // Color del borde al pasar el ratón (rojo más oscuro)
+  }
+}
+
+
+.VentanaEmer1{
+  margin: 0px;
+  color: black;
+}
+.VentanaEmer{
+  color: black;
+}
+
+.BienvenidoMensaje {
+  font-size: 1.3rem; // Tamaño de la fuente
+  font-weight: 600; // Peso de la fuente
+  margin: 0; // Elimina el margen para que se alinee con otros elementos
+  color: white; // Color del texto (puedes ajustar según tus necesidades)
+
+  @media (max-width: 768px) {
+    font-size: 1.2rem; // Ajustes para pantallas más pequeñas si es necesario
+  }
+
+  @media (max-width: 576px) {
+    font-size: 1rem; // Ajustes adicionales para pantallas más pequeñas si es necesario
+  }
+}

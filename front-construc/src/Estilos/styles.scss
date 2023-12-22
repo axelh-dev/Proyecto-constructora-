@@ -1,0 +1,69 @@
+//Estilos para Login
+.body {
+  margin: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: #f0f2f5;
+  font-family: 'Arial', sans-serif;
+}
+
+.login-container {
+  max-width: 300px;
+  width: 100%;
+  padding: 30px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  background-color: #fff;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+
+  h2 {
+    font-size: 1.5rem;
+    margin-bottom: 20px;
+    color: #1877f2;
+  }
+
+  form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    label {
+      margin-bottom: 8px;
+      color: #65676b;
+      font-weight: bold;
+    }
+
+    input {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 16px;
+      border: 1px solid #dddfe2;
+      border-radius: 4px;
+      background-color: #f0f2f5;
+    }
+
+    button {
+      width: 100%;
+      background-color: #1877f2;
+      color: #fff;
+      padding: 12px;
+      cursor: pointer;
+      border: none;
+      border-radius: 8px;
+
+      &:hover {
+        background-color: #166fe5;
+      }
+    }
+  }
+//Estilo de Error de Login
+  p.error-message {
+    margin-top: 20px;
+    color: #ff0000; // Color rojo para mensajes de error
+    font-weight: bold;
+  }
+}
+
+
