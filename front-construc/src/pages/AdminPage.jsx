@@ -67,7 +67,6 @@ const AdminPage = (props) => {
     } finally {
       // Limpiar el campo después de la solicitud, independientemente de si tiene éxito o falla
       setNombreMuni("");
-      handleCloseModal();
     }
   };
 
@@ -169,7 +168,7 @@ const AdminPage = (props) => {
                 type="text"
                 className="form-control"
                 id="nombreMuni"
-                placeholder="Ingrese el nombre de la municipalidad"
+                placeholder="Nombre de la municipalidad"
                 value={nombreMuni}
                 onChange={(e) => setNombreMuni(e.target.value)}
               />

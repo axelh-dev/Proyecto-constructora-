@@ -41,7 +41,8 @@ $color-link-hover: black;
 }
 
 .Titulo p {
-  font-size: 24px;
+  padding: 10px;
+  font-size: 1rem;
   font-weight: bold;
   margin-bottom: 20px;
 }
@@ -90,6 +91,10 @@ $color-link-hover: black;
 
 
 .Datosesquina {
+  z-index: 300;
+  background: white;
+  font-size: .6rem;
+  position: fixed;
   position: fixed;
   bottom: 0;
   right: 0;
