@@ -5,13 +5,16 @@ import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
-import axios from "axios"; // Importa Axios
+import axios from "axios";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "../Estilos/AdminStyles.scss";
 import logo from "../assets/logo.svg";
 import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const AdminPage = (props) => {
+  const navigate = useNavigate();
+
   const location = useLocation();
   const { usuario, municipio, role } = location.state || {};
   const [showModal, setShowModal] = useState(false);
@@ -20,6 +23,7 @@ const AdminPage = (props) => {
   const [nombreMuni, setNombreMuni] = useState("");
   const [nombreUsuario, setNombreUsuario] = useState("");
   const [contrasenaUsuario, setContrasenaUsuario] = useState("");
+
   useEffect(() => {
     const fetchMunicipalidades = async () => {
       try {
@@ -54,8 +58,10 @@ const AdminPage = (props) => {
 
       if (response.status === 201) {
         console.log("Municipalidad creada exitosamente");
-        const nuevaLista = await axios.get(endPoint);
-        setMunicipalidades(nuevaLista.data);
+        setMunicipalidades((prevMunicipalidades) => [
+          ...prevMunicipalidades,
+          response.data,
+        ]);
       } else {
         console.error(
           "Error al crear la municipalidad. Estado de la respuesta:",
@@ -129,17 +135,26 @@ const AdminPage = (props) => {
 
             <div className="municipalidades-container">
               {municipalidades.map((muni) => (
-                <Link
-                  key={muni.munici_id}
-                  to={{
-                    pathname: `/user`,
-                    state: { role, munici_id: muni.munici_id },
-                  }}
-                  className="municipalidad-card border"
-                >
+                <div key={muni.munici_id} className="municipalidad-card border">
                   <img src={logo} alt="img_muni" />
                   <p>{muni.name}</p>
-                </Link>
+                  <button
+                    type="button" 
+                    className="btn btn-primary"
+                    onClick={() =>
+                      navigate("/user", {
+                        state: {
+                          usuario,
+                          municipio: muni.munici_id,
+                          role: role,
+                          municipioName: muni.name,
+                        },
+                      })
+                    }
+                  >
+                    Ir a la Municipalidad
+                  </button>
+                </div>
               ))}
             </div>
           </div>

@@ -25,9 +25,7 @@ const Login = () => {
         navigate('/admin', { state: { usuario: userData.user, municipio: userData.municipio, role: userData.role} });
       } else if (userData.role === 'user') {
         navigate('/user', { state: { usuario: userData.user, municipio: userData.municipio, role: userData.role} });
-      } else if (userData.role === 'superuser') {
-        navigate('/super', { state: { usuario: userData.user, municipio: userData.municipio, role: userData.role} });
-      }
+      } 
     } catch (error) {
       console.error('Error durante el inicio de sesión', error);
       setError('Credenciales incorrectas. Por favor, inténtalo de nuevo.');

@@ -12,7 +12,7 @@ const App = () => {
       <Routes>
         <Route path="/admin" element={<AdminPage />} />
         <Route path="/user" element={<PageProyectos />} />
-        <Route path="/user2" element={<PageFYV />} />
+        <Route path="/proyects" element={<PageFYV />} />
         <Route path="/" element={<Login />} />
       </Routes>
     </BrowserRouter>

@@ -12,8 +12,13 @@ import logo from '../assets/logo.svg';
 
 const AdminPage = (props) => {
   const location = useLocation();
-  const { usuario, municipio } = location.state || {};
+  const { usuario, municipio, role, municipioName } = location.state || {};
 
+  console.log(location.state);
+  console.log(usuario)
+  console.log(municipio)
+  console.log(municipioName)
+  console.log(role)
   const [showModal, setShowModal] = useState(false);
 
   const handleOpenModal = () => {

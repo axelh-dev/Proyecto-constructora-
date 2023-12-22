@@ -31,10 +31,73 @@ $color-link-hover: black;
 }
 
                                 //Estilos para la info empresa
-.content-pro{
-  padding: 1.4rem 1.4rem 0 1.4rem;
+
+/* Estilos generales */
+.content-pro {
+  padding: 20px;
+  text-align: center;
 }
+
+.Titulo p {
+  padding: 10px;
+  font-size: 1rem;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+.proyectos-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+}
+
+.proyecto-card {
+  flex: 0 0 calc(30% - 20px); /* Ajusta según el número de columnas deseadas */
+  margin: 10px;
+  padding: 15px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  text-align: center;
+  background-color: #fff;
+}
+
+.proyecto-card img {
+  max-height: 150px;
+}
+
+.proyecto-card p {
+  font-size: 18px;
+  margin: 0;
+}
+
+/* Estilos adicionales para dispositivos más pequeños (ajustar según sea necesario) */
+@media only screen and (max-width: 1200px) {
+  .proyecto-card {
+    flex-basis: calc(50% - 20px); /* Dos columnas en pantallas medianas */
+  }
+}
+
+@media only screen and (max-width: 757px) {
+  .proyecto-card {
+    flex-basis: calc(50% - 20px); /* Dos proyectos por línea en pantallas medianas */
+  }
+}
+/* Estilos adicionales para dispositivos pequeños (ajustar según sea necesario) */
+@media only screen and (max-width: 480px) {
+  .proyecto-card {
+    flex-basis: calc(100% - 20px); /* Un proyecto por línea en pantallas pequeñas */
+  }
+}
+
+
+
 .Datosesquina {
+  z-index: 300;
+  background: white;
+  font-size: 6rem;
+  padding: 10px;
+  border-radius: 10px;
+  position: fixed;
   position: fixed;
   bottom: 0;
   right: 0;

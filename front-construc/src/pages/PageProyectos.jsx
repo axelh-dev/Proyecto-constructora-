@@ -1,4 +1,4 @@
-import React, { useState,useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import Container from "react-bootstrap/Container";
 import Nav from "react-bootstrap/Nav";
@@ -8,17 +8,37 @@ import Modal from "react-bootstrap/Modal";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "../Estilos/PageProyectos.scss";
 import logo from "../assets/logo.svg";
+import carpeta from "../assets/carpeta.png";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
+
 
 const PageProyectos = (props) => {
   const location = useLocation();
-  const { usuario, municipio, role } = location.state || {};
+  const { usuario, municipio, role, municipioName } = location.state || {};
   const [showModal, setShowModal] = useState(false);
+  const [proyectos, setProyectos] = useState([]);
 
+
+  const navigate = useNavigate();
 
   useEffect(() => {
-    document.title = `Proyectos en ${municipio}`;
+    document.title = `Proyectos en ${municipioName}`;
 
+    // Obtener la lista de proyectos desde la API
+    const fetchProyectos = async () => {
+      try {
+        const endPoint =
+          "http://localhost:8000/api/municipalidadf/" + municipio;
+        const response = await axios.get(endPoint);
+        setProyectos(response.data);
+      } catch (error) {
+        console.error("Error al obtener la lista de proyectos", error);
+      }
+    };
+    fetchProyectos();
   }, [municipio]);
+
   const handleOpenModal = () => {
     setShowModal(true);
   };
@@ -44,7 +64,7 @@ const PageProyectos = (props) => {
             <Nav className="me-auto">
               <Navbar.Text>
                 Municipalidad:{" "}
-                <a className="text-capitalize mx-2 fw-bold">{municipio}</a>
+                <a className="text-capitalize mx-2 fw-bold">{municipioName}</a>
               </Navbar.Text>
             </Nav>
             <Nav>
@@ -73,7 +93,41 @@ const PageProyectos = (props) => {
       <div className="content-pro">
         <div className="Titulo">
           <p>LISTA DE PROYECTOS</p>
+          <div className="proyectos-container">
+            {proyectos.map((proyecto) => (
+              <div key={proyecto.project_id} className="proyecto-card border">
+                <img
+                  src={carpeta}
+                  width="200"
+                  height="200"
+                  className="d-inline-block align-top"
+                  alt="Logo Constructora"
+                />
+                <p>Nombre: {proyecto.name}</p>
+                <p>NOG: {proyecto.nog}</p>
+                <p>Fecha: {proyecto.date}</p>
 
+                <button
+                    type="button" 
+                    className="btn btn-primary"
+                    onClick={() =>
+                      navigate("/proyects", {
+                        state: {
+                          usuario,
+                          municipio: proyecto.munici_id,
+                          proyectoID:proyecto.project_id,
+                          role: role,
+                          nog:proyecto.nog,
+                          proyecto: proyecto.name,
+                        },
+                      })
+                    }
+                  >
+                    Ir a la Proyecto
+                  </button>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
 
