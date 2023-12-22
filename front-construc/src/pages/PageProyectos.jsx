@@ -12,30 +12,19 @@ import carpeta from "../assets/carpeta.png";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
-
 const PageProyectos = (props) => {
   const location = useLocation();
   const { usuario, municipio, role, municipioName } = location.state || {};
   const [showModal, setShowModal] = useState(false);
   const [proyectos, setProyectos] = useState([]);
-
+  const [nombreProyecto, setNombreProyecto] = useState("");
+  const [nogProyecto, setNogProyecto] = useState("");
+  const [fechaProyecto, setFechaProyecto] = useState("");
 
   const navigate = useNavigate();
 
   useEffect(() => {
     document.title = `Proyectos en ${municipioName}`;
-
-    // Obtener la lista de proyectos desde la API
-    const fetchProyectos = async () => {
-      try {
-        const endPoint =
-          "http://localhost:8000/api/municipalidadf/" + municipio;
-        const response = await axios.get(endPoint);
-        setProyectos(response.data);
-      } catch (error) {
-        console.error("Error al obtener la lista de proyectos", error);
-      }
-    };
     fetchProyectos();
   }, [municipio]);
 
@@ -43,8 +32,49 @@ const PageProyectos = (props) => {
     setShowModal(true);
   };
 
+  const fetchProyectos = async () => {
+    try {
+      const endPoint = "http://localhost:8000/api/municipalidadf/" + municipio;
+      const response = await axios.get(endPoint);
+      setProyectos(response.data);
+    } catch (error) {
+      console.error("Error al obtener la lista de proyectos", error);
+    }
+  };
   const handleCloseModal = () => {
     setShowModal(false);
+  };
+
+  const handleGuardarProyecto = async () => {
+    try {
+      const endpoint = "http://127.0.0.1:8000/api/v1/projects/";
+      const response = await axios.post(endpoint, {
+        name: nombreProyecto,
+        nog: nogProyecto,
+        date: fechaProyecto,
+        munici_id: municipio,
+      });
+
+      if (response.status === 201) {
+        console.log("Proyecto creado exitosamente");
+        setProyectos((prevProyectos) => [
+          ...prevProyectos,
+          response.data,
+        ]);
+      } else {
+        console.error(
+          "Error al crear el proyecto. Estado de la respuesta:",
+          response.status
+        );
+      }
+    } catch (error) {
+      console.error("Error en la solicitud POST:", error.message);
+    } finally {
+      setNombreProyecto("");
+      setNogProyecto("");
+      setFechaProyecto("");
+      setShowModal(false);
+    }
   };
 
   return (
@@ -94,30 +124,31 @@ const PageProyectos = (props) => {
         <div className="Titulo">
           <p>LISTA DE PROYECTOS</p>
           <div className="proyectos-container">
-            {proyectos.map((proyecto) => (
-              <div key={proyecto.project_id} className="proyecto-card border">
-                <img
-                  src={carpeta}
-                  width="200"
-                  height="200"
-                  className="d-inline-block align-top"
-                  alt="Logo Constructora"
-                />
-                <p>Nombre: {proyecto.name}</p>
-                <p>NOG: {proyecto.nog}</p>
-                <p>Fecha: {proyecto.date}</p>
+            {proyectos &&
+              proyectos.map((proyecto) => (
+                <div key={proyecto.project_id} className="proyecto-card border">
+                  <img
+                    src={carpeta}
+                    width="200"
+                    height="200"
+                    className="d-inline-block align-top"
+                    alt="Logo Constructora"
+                  />
+                  <p>Nombre: {proyecto.name}</p>
+                  <p>NOG: {proyecto.nog}</p>
+                  <p>Fecha: {proyecto.date}</p>
 
-                <button
-                    type="button" 
+                  <button
+                    type="button"
                     className="btn btn-primary"
                     onClick={() =>
                       navigate("/proyects", {
                         state: {
                           usuario,
                           municipio: proyecto.munici_id,
-                          proyectoID:proyecto.project_id,
+                          proyectoID: proyecto.project_id,
                           role: role,
-                          nog:proyecto.nog,
+                          nog: proyecto.nog,
                           proyecto: proyecto.name,
                         },
                       })
@@ -125,8 +156,8 @@ const PageProyectos = (props) => {
                   >
                     Ir a la Proyecto
                   </button>
-              </div>
-            ))}
+                </div>
+              ))}
           </div>
         </div>
       </div>
@@ -155,6 +186,8 @@ const PageProyectos = (props) => {
                 className="form-control"
                 id="nombreProyecto"
                 placeholder="Ingrese el nombre del proyecto"
+                value={nombreProyecto}
+                onChange={(e) => setNombreProyecto(e.target.value)}
               />
             </div>
             <div className="mb-3">
@@ -166,13 +199,21 @@ const PageProyectos = (props) => {
                 className="form-control"
                 id="nogProyecto"
                 placeholder="Ingrese el NOG del proyecto"
+                value={nogProyecto}
+                onChange={(e) => setNogProyecto(e.target.value)}
               />
             </div>
             <div className="mb-3">
               <label htmlFor="fechaProyecto" className="form-label">
                 Fecha:
               </label>
-              <input type="date" className="form-control" id="fechaProyecto" />
+              <input
+                type="date"
+                className="form-control"
+                id="fechaProyecto"
+                value={fechaProyecto}
+                onChange={(e) => setFechaProyecto(e.target.value)}
+              />
             </div>
           </div>
         </Modal.Body>
@@ -180,7 +221,7 @@ const PageProyectos = (props) => {
           <Button variant="secondary" onClick={handleCloseModal}>
             Cerrar
           </Button>
-          <Button variant="primary" onClick={handleCloseModal}>
+          <Button variant="primary" onClick={handleGuardarProyecto}>
             Guardar
           </Button>
         </Modal.Footer>
