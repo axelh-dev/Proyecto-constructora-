@@ -9,7 +9,6 @@ import axios from "axios";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "../Estilos/AdminStyles.scss";
 import logo from "../assets/logo.svg";
-import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 
 const AdminPage = (props) => {
@@ -25,7 +24,7 @@ const AdminPage = (props) => {
   const [contrasenaUsuario, setContrasenaUsuario] = useState("");
   const [selectedMunicipioId, setSelectedMunicipioId] = useState("");
   const role_id_fija = 2;
-  
+
   useEffect(() => {
     const fetchMunicipalidades = async () => {
       try {
@@ -113,6 +112,19 @@ const AdminPage = (props) => {
     }
   };
 
+  const handleCerrarSesion = async () => {
+    try {
+      const endpoint = "http://127.0.0.1:8000/api/logout/";
+      await axios.post(endpoint);
+
+      // Redirige a la página de inicio de sesión u otra página después de cerrar sesión
+      // Puedes ajustar la ruta según tus necesidades
+      navigate("/");
+    } catch (error) {
+      console.error("Error al cerrar sesión:", error.message);
+    }
+  };
+
   return (
     <>
       {role === "admin" && (
@@ -150,7 +162,9 @@ const AdminPage = (props) => {
                     Agregar
                   </Button>
                 )}
-                <Button type="submit border">Cerrar sesion</Button>
+                <Button type="submit border" onClick={handleCerrarSesion}>
+                  Cerrar sesión
+                </Button>
               </div>
             </Navbar.Collapse>
           </Container>
@@ -194,9 +208,8 @@ const AdminPage = (props) => {
           KM. 72.5, RUTA AL ATLANTICO ALDEA CASAS VIEJAS GUASTATOYA,
         </p>
         <p style={{ margin: 0 }}>EL PROGRESO TEL. 3091-9731</p>
-      </div>
 
-      <Modal show={showModal} onHide={handleCloseModal} centered>
+        <Modal show={showModal} onHide={handleCloseModal} centered>
         <Modal.Header closeButton>
           <Modal.Title className="Ventana">Datos</Modal.Title>
         </Modal.Header>
@@ -294,6 +307,7 @@ const AdminPage = (props) => {
         </Modal.Footer>
               
       </Modal>
+      </div>
     </>
   );
 };
