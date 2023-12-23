@@ -15,8 +15,9 @@ import { useNavigate } from "react-router-dom";
 
 const PageFYV = (props) => {
   const location = useLocation();
-  const { usuario, municipio, role, Muni_id } = location.state || {};
+  const { usuario, municipio, role, Muni_id, proyectoID, nog } = location.state || {};
   console.log(location.state);
+
   const [showModal, setShowModal] = useState(false);
   const [proyectos, setProyectos] = useState([]);
   const [tipoProyecto, setTipoProyecto] = useState("Fotos");
@@ -35,13 +36,27 @@ const PageFYV = (props) => {
 
   const fetchProyectos = async () => {
     try {
-      const endPoint = "http://localhost:8000/api/municipalidadf/" + Muni_id;
-      const response = await axios.get(endPoint);
-      setProyectos(response.data);
+      const proyectosEndpoint = `http://localhost:8000/api/municipalidadf/${Muni_id}`;
+      const proyectosResponse = await axios.get(proyectosEndpoint);
+      setProyectos(proyectosResponse.data);
+
+      if (tipoProyecto === "Fotos" || tipoProyecto === "Videos") {
+        const archivosEndpoint =
+          tipoProyecto === "Fotos"
+            ? `http://localhost:8000/proyectosfp/${proyectoID}/`
+            : `http://localhost:8000/proyectosfv/${proyectoID}/`;
+
+        const archivosResponse = await axios.get(archivosEndpoint);
+
+        // Aquí debes manejar la respuesta según tus necesidades.
+        // Puedes almacenar la información en el estado o procesarla de alguna manera.
+        console.log("Información de archivos:", archivosResponse.data);
+      }
     } catch (error) {
       console.error("Error al obtener la lista de proyectos", error);
     }
   };
+
 
   const handleCloseModal = () => {
     setShowModal(false);
@@ -49,33 +64,30 @@ const PageFYV = (props) => {
 
   const handleGuardarArchivo = async () => {
     try {
-      // Agrega el manejo del archivo según tus necesidades
-      console.log("Archivo:", archivoProyecto);
+      console.log("Archivo seleccionado:", archivoProyecto.name);
 
       let endpoint = "";
+      let formData = new FormData();
+
       if (tipoProyecto === "Fotos") {
         endpoint = "http://127.0.0.1:8000/api/v1/photos/";
+        formData.append("project_id", proyectoID);
+        formData.append("name", archivoProyecto.name);
+        formData.append("uploadedFile", archivoProyecto);
       } else if (tipoProyecto === "Videos") {
         endpoint = "http://127.0.0.1:8000/api/v1/videos/";
+        formData.append("project_id", proyectoID);
+        formData.append("name", archivoProyecto.name);
+        formData.append("uploadedFile", archivoProyecto);
       }
-
-      const formData = new FormData();
-      formData.append("archivo", archivoProyecto);
-      formData.append("munici_id", Muni_id);
-      formData.append("proyecto_id", /* Aquí deberías agregar el ID del proyecto */);
 
       const response = await axios.post(endpoint, formData);
 
       if (response.status === 201) {
-        console.log("Proyecto creado exitosamente");
-        setProyectos((prevProyectos) => {
-          const newArray = Array.isArray(prevProyectos) ? [...prevProyectos] : [];
-          newArray.push(response.data);
-          return newArray;
-        });
+        console.log("Archivo creado exitosamente");
       } else {
         console.error(
-          "Error al crear el proyecto. Estado de la respuesta:",
+          "Error al crear el archivo. Estado de la respuesta:",
           response.status
         );
       }
