@@ -78,7 +78,8 @@ class UserLogin(APIView):
                 role = user.role_id.descrip_role if user.role_id else None
 
                 municipio = user.munici_id.name if user.munici_id else None
-                return Response({'user': user.username, 'role': role, 'municipio': municipio}, status=status.HTTP_200_OK)
+                municipio_id = user.munici_id.munici_id if user.munici_id else None
+                return Response({'user': user.username, 'role': role, 'municipio': municipio, 'Muni_id': municipio_id}, status=status.HTTP_200_OK)
             else:
                 raise ValidationError('Usuario no encontrado o contraseña incorrecta')	
 

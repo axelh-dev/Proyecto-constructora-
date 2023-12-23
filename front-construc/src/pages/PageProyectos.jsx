@@ -14,7 +14,7 @@ import { useNavigate } from "react-router-dom";
 
 const PageProyectos = (props) => {
   const location = useLocation();
-  const { usuario, municipio, role, municipioName } = location.state || {};
+  const { usuario, municipio, role, municipioName, Muni_id } = location.state || {};
   const [showModal, setShowModal] = useState(false);
   const [proyectos, setProyectos] = useState([]);
   const [nombreProyecto, setNombreProyecto] = useState("");
@@ -24,7 +24,7 @@ const PageProyectos = (props) => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    document.title = `Proyectos en ${municipioName}`;
+    document.title = `Proyectos en ${municipio}`;
     fetchProyectos();
   }, [municipio]);
 
@@ -34,7 +34,7 @@ const PageProyectos = (props) => {
 
   const fetchProyectos = async () => {
     try {
-      const endPoint = "http://localhost:8000/api/municipalidadf/" + municipio;
+      const endPoint = "http://localhost:8000/api/municipalidadf/" + Muni_id;
       const response = await axios.get(endPoint);
       setProyectos(response.data);
     } catch (error) {
@@ -78,20 +78,6 @@ const PageProyectos = (props) => {
       setShowModal(false);
     }
   };
-
-  const handleCerrarSesion = async () => {
-    try {
-      const endpoint = "http://127.0.0.1:8000/api/logout/";
-      await axios.post(endpoint);
-
-      // Redirige a la página de inicio de sesión u otra página después de cerrar sesión
-      // Puedes ajustar la ruta según tus necesidades
-      navigate("/");
-    } catch (error) {
-      console.error("Error al cerrar sesión:", error.message);
-    }
-  };
-
   return (
     <>
       <Navbar expand="md" bg="light" data-bs-theme="light">
@@ -128,7 +114,7 @@ const PageProyectos = (props) => {
                   Agregar
                 </Button>
               )}
-              <Button type="submit border" onClick={handleCerrarSesion}>
+              <Button type="submit border" onClick={handleOpenModal}>
                 Cerrar sesion
               </Button>
             </div>

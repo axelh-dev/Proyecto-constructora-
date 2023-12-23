@@ -187,9 +187,9 @@ const AdminPage = (props) => {
                       navigate("/user", {
                         state: {
                           usuario,
-                          municipio: muni.munici_id,
+                          municipio: muni.name,
+                          Muni_id: muni.munici_id,
                           role: role,
-                          municipioName: muni.name,
                         },
                       })
                     }

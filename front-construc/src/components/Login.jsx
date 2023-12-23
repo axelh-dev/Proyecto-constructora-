@@ -24,7 +24,7 @@ const Login = () => {
       if (userData.role === 'admin') {
         navigate('/admin', { state: { usuario: userData.user, municipio: userData.municipio, role: userData.role} });
       } else if (userData.role === 'user') {
-        navigate('/user', { state: { usuario: userData.user, municipio: userData.municipio, role: userData.role} });
+        navigate('/user', { state: { usuario: userData.user, municipio: userData.municipio, role: userData.role, Muni_id: userData.Muni_id} });
       } 
     } catch (error) {
       console.error('Error durante el inicio de sesión', error);
