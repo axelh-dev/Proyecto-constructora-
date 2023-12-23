@@ -134,7 +134,18 @@ def videosProyect(request, projecto_id):
     if videos.exists():
         return JsonResponse(videos_json, safe=False)
     else:
-        return JsonResponse({'mensaje': 'No se encontraron proyectos para el municipio especificado.'})
+        return JsonResponse({'mensaje': 'No se encontraron videos para el proyecto especificado.'})
+
+def photosProyect(request, projecto_id):
+    photos = Photos.objects.filter(project_id= projecto_id)
+    
+    serializer = PhotosSerializer(photos, many=True)
+    photos_json = serializer.data
+
+    if photos.exists():
+        return JsonResponse(photos_json, safe=False)
+    else:
+        return JsonResponse({'mensaje': 'No se encontraron imagenes para el proyecto especificado.'})
 
 
 class PhotosViewSet(viewsets.ModelViewSet):
