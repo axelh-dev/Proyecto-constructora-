@@ -145,7 +145,7 @@ const PageProyectos = (props) => {
                       navigate("/proyects", {
                         state: {
                           usuario,
-                          municipio: proyecto.munici_id,
+                          municipio,
                           proyectoID: proyecto.project_id,
                           role: role,
                           nog: proyecto.nog,
