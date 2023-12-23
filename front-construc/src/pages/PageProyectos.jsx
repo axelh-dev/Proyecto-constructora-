@@ -53,7 +53,7 @@ const PageProyectos = (props) => {
         name: nombreProyecto,
         nog: nogProyecto,
         date: fechaProyecto,
-        munici_id: municipio,
+        munici_id: Muni_id,
       });
 
       if (response.status === 201) {
