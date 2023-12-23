@@ -116,13 +116,23 @@ class ProjectsViewSet(viewsets.ModelViewSet):
 def ProyectMuni(request, municipio_id):
     proyectos = Projects.objects.filter(munici_id=municipio_id)
     
-    # Utiliza un serializador para convertir los proyectos a JSON
     serializer = ProjectsSerializer(proyectos, many=True)
     proyectos_json = serializer.data
 
-    # Verifica si hay proyectos encontrados
     if proyectos.exists():
         return JsonResponse(proyectos_json, safe=False)
+    else:
+        return JsonResponse({'mensaje': 'No se encontraron proyectos para el municipio especificado.'})
+
+
+def videosProyect(request, projecto_id):
+    videos = Videos.objects.filter(project_id= projecto_id)
+    
+    serializer = VideosSerializer(videos, many=True)
+    videos_json = serializer.data
+
+    if videos.exists():
+        return JsonResponse(videos_json, safe=False)
     else:
         return JsonResponse({'mensaje': 'No se encontraron proyectos para el municipio especificado.'})
 

@@ -39,6 +39,7 @@ class AppUser(AbstractBaseUser, PermissionsMixin):
     username = models.CharField(max_length=255, unique=True)
     role_id = models.ForeignKey(userrole, on_delete=models.CASCADE, default=1)
     munici_id = models.ForeignKey(municipalidad, on_delete=models.CASCADE, default=1, null=True)
+    is_staff = models.BooleanField(default=False)
     objects = AppUserManager()
 
     USERNAME_FIELD = 'username'
