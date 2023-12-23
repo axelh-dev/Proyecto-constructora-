@@ -95,7 +95,7 @@ const PageProyectos = (props) => {
             <Nav className="me-auto">
               <Navbar.Text>
                 Municipalidad:{" "}
-                <a className="text-capitalize mx-2 fw-bold">{municipioName}</a>
+                <a className="text-capitalize mx-2 fw-bold">{municipio}</a>
               </Navbar.Text>
             </Nav>
             <Nav>
