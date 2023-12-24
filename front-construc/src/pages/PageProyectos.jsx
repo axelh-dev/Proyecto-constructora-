@@ -142,7 +142,7 @@ const PageProyectos = (props) => {
                     type="button"
                     className="btn btn-primary"
                     onClick={() =>
-                      navigate("/proyects", {
+                      navigate("/municipalidad/proyectos/content", {
                         state: {
                           usuario,
                           municipio,

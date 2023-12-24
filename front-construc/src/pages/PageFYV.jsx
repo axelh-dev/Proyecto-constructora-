@@ -119,6 +119,23 @@ const PageFYV = (props) => {
                 Municipalidad:{" "}
                 <a className="text-capitalize mx-2 fw-bold">{municipio}</a>
               </Navbar.Text>
+              
+              <NavDropdown className="" title="Visualizar" id="basic-nav-dropdown">
+                <NavDropdown.Item
+                  href=""
+                  className="btn btn-primary"
+                  onClick={() => setTipoProyecto("Fotos")}
+                >
+                  Fotos
+                </NavDropdown.Item>
+                <NavDropdown.Item
+                  href=""
+                  className="btn btn-primary"
+                  onClick={() => setTipoProyecto("Videos")}
+                >
+                  Videos
+                </NavDropdown.Item>
+              </NavDropdown>
             </Nav>
             <Nav>
               <Navbar.Text>
@@ -136,22 +153,7 @@ const PageFYV = (props) => {
                   Agregar
                 </Button>
               )}
-              <NavDropdown title="Visualizar" id="basic-nav-dropdown">
-                <NavDropdown.Item
-                  href=""
-                  className="btn btn-primary"
-                  onClick={() => setTipoProyecto("Fotos")}
-                >
-                  Fotos
-                </NavDropdown.Item>
-                <NavDropdown.Item
-                  href=""
-                  className="btn btn-primary"
-                  onClick={() => setTipoProyecto("Videos")}
-                >
-                  Videos
-                </NavDropdown.Item>
-              </NavDropdown>
+            
               <Button type="submit border" onClick={handleOpenModal}>
                 Cerrar sesion
               </Button>

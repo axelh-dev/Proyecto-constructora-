@@ -22,7 +22,7 @@ const Login = ({ setLoggedIn }) => {
       const userData = response.data;
 
       if (userData.role === "admin") {
-        navigate("/admin", {
+        navigate("/municipalidad", {
           state: {
             usuario: userData.user,
             municipio: userData.municipio,
@@ -30,7 +30,7 @@ const Login = ({ setLoggedIn }) => {
           },
         });
       } else if (userData.role === "user") {
-        navigate("/user", {
+        navigate("/municipalidad/proyectos", {
           state: {
             usuario: userData.user,
             municipio: userData.municipio,

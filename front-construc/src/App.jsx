@@ -23,13 +23,13 @@ const App = () => {
     <BrowserRouter>
       <Routes>
         <Route
-          path="/admin"
+          path="/municipalidad"
           element={
             <ProtectedRoute element={<AdminPage />} isLoggedIn={isLoggedIn} />
           }
         />
         <Route
-          path="/user"
+          path="/municipalidad/proyectos"
           element={
             <ProtectedRoute
               element={<PageProyectos />}
@@ -38,7 +38,7 @@ const App = () => {
           }
         />
         <Route
-          path="/proyects"
+          path="/municipalidad/proyectos/content"
           element={
             <ProtectedRoute element={<PageFYV />} isLoggedIn={isLoggedIn} />
           }

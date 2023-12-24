@@ -184,7 +184,7 @@ const AdminPage = (props) => {
                     type="button" 
                     className="btn btn-primary"
                     onClick={() =>
-                      navigate("/user", {
+                      navigate("/municipalidad/proyectos", {
                         state: {
                           usuario,
                           municipio: muni.name,
