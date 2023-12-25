@@ -154,7 +154,7 @@ const PageProyectos = (props) => {
                       })
                     }
                   >
-                    Ir a la Proyecto
+                    Ir al Proyecto
                   </button>
                 </div>
               ))
