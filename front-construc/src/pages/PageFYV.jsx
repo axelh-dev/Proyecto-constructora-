@@ -63,6 +63,18 @@ const PageFYV = (props) => {
     setShowModal(false);
     setArchivoSeleccionado(null);
   };
+  const handleCerrarSesion = async () => {
+    try {
+      const endpoint = "http://127.0.0.1:8000/api/logout/";
+      await axios.post(endpoint);
+
+      // Redirige a la página de inicio de sesión u otra página después de cerrar sesión
+      // Puedes ajustar la ruta según tus necesidades
+      navigate("/");
+    } catch (error) {
+      console.error("Error al cerrar sesión:", error.message);
+    }
+  };
 
   const handleGuardarArchivo = async () => {
     try {
@@ -161,7 +173,7 @@ const PageFYV = (props) => {
                 </Button>
               )}
 
-              <Button type="submit border" onClick={handleOpenModal}>
+              <Button type="submit border" onClick={handleCerrarSesion}>
                 Cerrar sesion
               </Button>
             </div>
