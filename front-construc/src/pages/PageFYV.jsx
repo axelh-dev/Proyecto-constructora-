@@ -15,12 +15,12 @@ import { useNavigate } from "react-router-dom";
 
 const PageFYV = (props) => {
   const location = useLocation();
-  const { usuario, municipio, role, Muni_id, proyectoID, nog } = location.state || {};
-  console.log(location.state);
+  const { usuario, municipio, role, Muni_id, proyectoID, nog } =
+    location.state || {};
 
   const [showModal, setShowModal] = useState(false);
   const [proyectos, setProyectos] = useState([]);
-  const [tipoProyecto, setTipoProyecto] = useState("Fotos");
+  const [tipoArchivo, setTipoProyecto] = useState("Fotos");
   const [archivoProyecto, setArchivoProyecto] = useState(null);
 
   const navigate = useNavigate();
@@ -36,27 +36,31 @@ const PageFYV = (props) => {
 
   const fetchProyectos = async () => {
     try {
-      const proyectosEndpoint = `http://localhost:8000/api/municipalidadf/${Muni_id}`;
-      const proyectosResponse = await axios.get(proyectosEndpoint);
-      setProyectos(proyectosResponse.data);
-
-      if (tipoProyecto === "Fotos" || tipoProyecto === "Videos") {
-        const archivosEndpoint =
-          tipoProyecto === "Fotos"
-            ? `http://localhost:8000/proyectosfp/${proyectoID}/`
-            : `http://localhost:8000/proyectosfv/${proyectoID}/`;
-
+      if (tipoArchivo === "Fotos" || tipoArchivo === "Videos") {
+        const endpointPrefix =
+          tipoArchivo === "Fotos" ? "proyectosfp" : "proyectosfv";
+        const archivosEndpoint = `http://localhost:8000/api/${endpointPrefix}/${proyectoID}/`;
+  
         const archivosResponse = await axios.get(archivosEndpoint);
-
+  
+        // Validar si los archivos son fotos o videos
+        const esFotos = tipoArchivo === "Fotos";
+        const archivos = archivosResponse.data;
+  
+        // Actualizar el estado proyectos con los datos recuperados
+        setProyectos(archivos);
+  
         // Aquí debes manejar la respuesta según tus necesidades.
-        // Puedes almacenar la información en el estado o procesarla de alguna manera.
-        console.log("Información de archivos:", archivosResponse.data);
+        console.log(`Información de ${esFotos ? "fotos" : "videos"}:`, archivos);
+      } else {
+        console.error(
+          "Tipo de archivo no válido. Debe ser 'Fotos' o 'Videos'."
+        );
       }
     } catch (error) {
       console.error("Error al obtener la lista de proyectos", error);
     }
   };
-
 
   const handleCloseModal = () => {
     setShowModal(false);
@@ -69,12 +73,12 @@ const PageFYV = (props) => {
       let endpoint = "";
       let formData = new FormData();
 
-      if (tipoProyecto === "Fotos") {
+      if (tipoArchivo === "Fotos") {
         endpoint = "http://127.0.0.1:8000/api/v1/photos/";
         formData.append("project_id", proyectoID);
         formData.append("name", archivoProyecto.name);
         formData.append("uploadedFile", archivoProyecto);
-      } else if (tipoProyecto === "Videos") {
+      } else if (tipoArchivo === "Videos") {
         endpoint = "http://127.0.0.1:8000/api/v1/videos/";
         formData.append("project_id", proyectoID);
         formData.append("name", archivoProyecto.name);
@@ -119,8 +123,12 @@ const PageFYV = (props) => {
                 Municipalidad:{" "}
                 <a className="text-capitalize mx-2 fw-bold">{municipio}</a>
               </Navbar.Text>
-              
-              <NavDropdown className="" title="Visualizar" id="basic-nav-dropdown">
+
+              <NavDropdown
+                className=""
+                title="Visualizar"
+                id="basic-nav-dropdown"
+              >
                 <NavDropdown.Item
                   href=""
                   className="btn btn-primary"
@@ -153,7 +161,7 @@ const PageFYV = (props) => {
                   Agregar
                 </Button>
               )}
-            
+
               <Button type="submit border" onClick={handleOpenModal}>
                 Cerrar sesion
               </Button>
@@ -163,45 +171,36 @@ const PageFYV = (props) => {
       </Navbar>
       <div className="content-pro">
         <div className="Titulo">
-          {tipoProyecto === "Fotos" && <p>Vista de Imágenes</p>}
-          {tipoProyecto === "Videos" && <p>Vista de Videos</p>}
+          {tipoArchivo === "Fotos" && <p>Vista de Imágenes</p>}
+          {tipoArchivo === "Videos" && <p>Vista de Videos</p>}
           <div className="proyectos-container">
             {proyectos && proyectos.length > 0 ? (
               proyectos.map((proyecto) => (
                 <div key={proyecto.project_id} className="proyecto-card border">
-                  <img
-                    src={carpeta}
-                    width="200"
-                    height="200"
-                    className="d-inline-block align-top"
-                    alt="Logo Constructora"
-                  />
                   <p>Nombre: {proyecto.name}</p>
-                  <p>NOG: {proyecto.nog}</p>
+                  <p>NOG: {nog}</p>
                   <p>Fecha: {proyecto.date}</p>
-                  <button
-                    type="button"
-                    className="btn btn-primary"
-                    onClick={() =>
-                      navigate("/proyects", {
-                        state: {
-                          usuario,
-                          municipio,
-                          proyectoID: proyecto.project_id,
-                          role: role,
-                          nog: proyecto.nog,
-                          proyecto: proyecto.name,
-                        },
-                      })
-                    }
-                  >
-                    Ir a la Proyecto
-                  </button>
+
+                  {tipoArchivo === "Fotos" && (
+                    <img
+                      src={proyecto.uploadedFile}
+                      alt={`Imagen de ${proyecto.name}`}
+                      width="200"
+                      height="200"
+                    />
+                  )}
+
+                  {tipoArchivo === "Videos" && (
+                    <video width="200" height="200" controls>
+                      <source src={proyecto.uploadedFile} type="video/mp4" />
+                      Tu navegador no soporta el tag de video.
+                    </video>
+                  )}
                 </div>
               ))
             ) : (
               <p>
-                {tipoProyecto === "Fotos"
+                {tipoArchivo === "Fotos"
                   ? "No hay imágenes disponibles"
                   : "No hay videos disponibles"}
               </p>
@@ -209,6 +208,7 @@ const PageFYV = (props) => {
           </div>
         </div>
       </div>
+
       <Modal show={showModal} onHide={handleCloseModal} centered>
         <Modal.Header closeButton>
           <Modal.Title className="VentanaEmer1">Nuevo Proyecto</Modal.Title>
@@ -224,7 +224,7 @@ const PageFYV = (props) => {
                 type="text"
                 className="form-control"
                 id="tipoProyecto"
-                value={tipoProyecto}
+                value={tipoArchivo}
                 readOnly
               />
             </div>
