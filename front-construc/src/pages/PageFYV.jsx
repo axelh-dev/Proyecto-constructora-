@@ -69,10 +69,10 @@ const PageFYV = (props) => {
   const handleGuardarArchivo = async () => {
     try {
       console.log("Archivo seleccionado:", archivoProyecto.name);
-
+  
       let endpoint = "";
       let formData = new FormData();
-
+  
       if (tipoArchivo === "Fotos") {
         endpoint = "http://127.0.0.1:8000/api/v1/photos/";
         formData.append("project_id", proyectoID);
@@ -84,11 +84,14 @@ const PageFYV = (props) => {
         formData.append("name", archivoProyecto.name);
         formData.append("uploadedFile", archivoProyecto);
       }
-
+  
       const response = await axios.post(endpoint, formData);
-
+  
       if (response.status === 201) {
         console.log("Archivo creado exitosamente");
+  
+        // Actualizar la lista de proyectos después de agregar el archivo
+        fetchProyectos();
       } else {
         console.error(
           "Error al crear el archivo. Estado de la respuesta:",
@@ -103,6 +106,7 @@ const PageFYV = (props) => {
       setShowModal(false);
     }
   };
+  
 
   return (
     <>
