@@ -22,6 +22,7 @@ class AppUserManager(BaseUserManager):
 class municipalidad(models.Model):
     munici_id = models.BigAutoField(primary_key=True)
     name = models.CharField(max_length=50, null=False)
+    uploadedFile = models.FileField(upload_to="image/", default='C:/Users/axelh/Downloads/imgxd.jpg')
     
     def __str__(self):
         return f"User: {self.name}"
