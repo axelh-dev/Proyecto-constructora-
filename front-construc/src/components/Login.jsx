@@ -1,14 +1,30 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import "../Estilos/styles.scss";
+import img1 from "../assets/imgs/img1.jpg";
+import img2 from "../assets/imgs/img2.jpg";
+import img3 from "../assets/imgs/img3.jpg";
+import img4 from "../assets/imgs/img4.jpg";
+import img5 from "../assets/imgs/img5.jpg";
 
 const Login = ({ setLoggedIn }) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [currentImageIndex, setCurrentImageIndex] = useState(0); // Nuevo estado para la imagen actual
   const navigate = useNavigate();
+
+  const images = [img1, img2, img3, img4, img5];
+
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      setCurrentImageIndex((prevIndex) => (prevIndex + 1) % images.length);
+    }, 4000);
+
+    return () => clearInterval(intervalId); // Limpiar el temporizador al desmontar el componente
+  }, [images.length]);
 
   const handleLogin = async () => {
     try {
@@ -62,8 +78,16 @@ const Login = ({ setLoggedIn }) => {
     handleLogin();
   };
 
+  const backgroundStyle = {
+    backgroundImage: `url(${images[currentImageIndex]})`,
+    backgroundSize: "cover",
+    backgroundPosition: "center",
+    backgroundRepeat: "no-repeat",
+    height: "100vh", 
+  };
+
   return (
-    <div className="body">
+    <div className="body" style={backgroundStyle}>
       <div className="login-container">
         <h2>Login</h2>
         {error && <p className="error-message">{error}</p>}

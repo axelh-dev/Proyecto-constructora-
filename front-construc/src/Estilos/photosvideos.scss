@@ -1,0 +1,24 @@
+.proyectos-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+}
+
+.card {
+  width: 250px;
+  height: 250px;
+  margin: 10px;
+  border: 1px solid #ccc;
+  padding: 10px;
+  display: flex; /* Añadir display flex */
+  align-items: center; /* Centrar verticalmente */
+  position: relative; /* Añadir posición relativa para posicionar el menú */
+}
+
+.card img,
+.card video {
+  width: 80%;
+  height: 80%;
+  object-fit: cover; /* La imagen se ajusta manteniendo las proporciones y recortando si es necesario */
+}
+

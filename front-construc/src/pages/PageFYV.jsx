@@ -153,52 +153,21 @@ const PageFYV = (props) => {
           </Navbar.Collapse>
         </Container>
       </Navbar>
+      
       <div className="content-pro">
-        <div className="Titulo">  </div>
+        <div className="Titulo">  
           {tipoArchivo === "Fotos" && <p>Vista de Imágenes</p>}
           {tipoArchivo === "Videos" && <p>Vista de Videos</p>}
-          <div className="proyectos-container container-fluid">
+          </div>
             {tipoArchivo === "Videos" && (
               <ComponenteA proyectoID={proyectoID} updateCounter={updateCounter} />
             )}
             {tipoArchivo === "Fotos" && (
               <ComponenteB proyectoID={proyectoID}  updateCounter={updateCounter}/>
             )}
-          </div>
       </div>
 
-      {/* Modal para mostrar la imagen o el video */}
-      <Modal
-        show={archivoSeleccionado !== null}
-        onHide={handleCloseModal}
-        centered
-      >
-        <Modal.Header closeButton>
-          <Modal.Title>
-            {tipoArchivo === "Fotos" ? "Imagen" : "Video"}
-          </Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          {tipoArchivo === "Fotos" && (
-            <img
-              src={archivoSeleccionado?.uploadedFile}
-              alt={`Imagen de ${archivoSeleccionado?.name}`}
-              width="100%"
-            />
-          )}
-
-          {tipoArchivo === "Videos" && (
-            <video width="100%" height="auto" controls>
-              <source
-                src={archivoSeleccionado?.uploadedFile}
-                type="video/mp4"
-              />
-              Tu navegador no soporta el tag de video.
-            </video>
-          )}
-        </Modal.Body>
-      </Modal>
-
+      
       <Modal show={showModal} onHide={handleCloseModal} centered>
         <Modal.Header closeButton>
           <Modal.Title className="VentanaEmer1">Nuevo Proyecto</Modal.Title>
