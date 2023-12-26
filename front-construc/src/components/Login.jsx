@@ -57,12 +57,17 @@ const Login = ({ setLoggedIn }) => {
     }
   };
 
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    handleLogin();
+  };
+
   return (
     <div className="body">
       <div className="login-container">
         <h2>Login</h2>
         {error && <p className="error-message">{error}</p>}
-        <form>
+        <form onSubmit={handleSubmit}>
           <label>Usuario</label>
           <input
             type="text"
@@ -75,7 +80,7 @@ const Login = ({ setLoggedIn }) => {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
-          <button type="button" onClick={handleLogin} disabled={loading}>
+          <button type="submit" disabled={loading}>
             {loading ? "Cargando..." : "Inicio de Sesión"}
           </button>
         </form>

@@ -73,18 +73,18 @@ class Projects(models.Model):
         return f"Project: {self.name}"
 
 class Photos(models.Model):
-    photo_id = models.BigAutoField(primary_key=True)
+    id = models.BigAutoField(primary_key=True)
     project_id = models.ForeignKey(Projects, on_delete=models.CASCADE, related_name='photos')
-    name = models.CharField(max_length=50, null=False)
+    name = models.CharField(max_length=200, null=False)
     uploadedFile = models.FileField(upload_to="image/", default='C:/Users/axelh/Downloads/imgxd.jpg')
 
     def __str__(self):
         return f"Photo: {self.name}"
 
 class Videos(models.Model):
-    video_id = models.BigAutoField(primary_key=True)
+    id = models.BigAutoField(primary_key=True)
     project_id = models.ForeignKey(Projects, on_delete=models.CASCADE, related_name='videos')
-    name = models.CharField(max_length=50, null=False)
+    name = models.CharField(max_length=200, null=False)
     uploadedFile = models.FileField(upload_to="Videos/",  default='C:/Users/axelh/Downloads/imgxd.jpg')
 
     def __str__(self):

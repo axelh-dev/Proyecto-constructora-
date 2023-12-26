@@ -8,69 +8,42 @@ import NavDropdown from "react-bootstrap/NavDropdown";
 import Modal from "react-bootstrap/Modal";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "../Estilos/PageProyectos.scss";
+import "../Estilos/photosvideos.scss";
 import logo from "../assets/logo.svg";
 import axios from "axios";
+import ComponenteA from '../components/cargavideos';
+import ComponenteB from '../components/cargaphotos';
 import { useNavigate } from "react-router-dom";
-
 const PageFYV = (props) => {
   const location = useLocation();
   const { usuario, municipio, role, Muni_id, proyectoID, nog } =
     location.state || {};
 
   const [showModal, setShowModal] = useState(false);
-  const [proyectos, setProyectos] = useState([]);
   const [tipoArchivo, setTipoProyecto] = useState("Fotos");
   const [archivoProyecto, setArchivoProyecto] = useState(null);
   const [archivoSeleccionado, setArchivoSeleccionado] = useState(null);
+  const [updateCounter, setUpdateCounter] = useState(0);
 
   const navigate = useNavigate();
 
   useEffect(() => {
     document.title = `Proyectos en ${municipio}`;
-    fetchProyectos();
   }, [municipio]);
 
   const handleOpenModal = () => {
     setShowModal(true);
   };
 
-  const fetchProyectos = async () => {
-    try {
-      if (tipoArchivo === "Fotos" || tipoArchivo === "Videos") {
-        const endpointPrefix =
-          tipoArchivo === "Fotos" ? "proyectosfp" : "proyectosfv";
-        const archivosEndpoint = `http://localhost:8000/api/${endpointPrefix}/${proyectoID}/`;
-
-        const archivosResponse = await axios.get(archivosEndpoint);
-
-        const esFotos = tipoArchivo === "Fotos";
-        const archivos = archivosResponse.data;
-
-        setProyectos(archivos);
-
-        console.log(`Información de ${esFotos ? "fotos" : "videos"}:`, archivos);
-      } else {
-        console.error(
-          "Tipo de archivo no válido. Debe ser 'Fotos' o 'Videos'."
-        );
-      }
-    } catch (error) {
-      console.error("Error al obtener la lista de proyectos", error);
-    }
-  };
-
   const handleCloseModal = () => {
     setShowModal(false);
     setArchivoSeleccionado(null);
   };
+
   const handleCerrarSesion = async () => {
     try {
       const endpoint = "http://127.0.0.1:8000/api/logout/";
       await axios.post(endpoint);
-
-      // Redirige a la página de inicio de sesión u otra página después de cerrar sesión
-      // Puedes ajustar la ruta según tus necesidades
-      navigate("/");
     } catch (error) {
       console.error("Error al cerrar sesión:", error.message);
     }
@@ -99,7 +72,7 @@ const PageFYV = (props) => {
 
       if (response.status === 201) {
         console.log("Archivo creado exitosamente");
-        fetchProyectos();
+        setUpdateCounter((prevCounter) => prevCounter + 1);
       } else {
         console.error(
           "Error al crear el archivo. Estado de la respuesta:",
@@ -181,72 +154,29 @@ const PageFYV = (props) => {
         </Container>
       </Navbar>
       <div className="content-pro">
-        <div className="Titulo">
+        <div className="Titulo">  </div>
           {tipoArchivo === "Fotos" && <p>Vista de Imágenes</p>}
           {tipoArchivo === "Videos" && <p>Vista de Videos</p>}
-          <div className="proyectos-container">
-            {proyectos && proyectos.length > 0 ? (
-              proyectos.map((proyecto) => (
-                <div key={proyecto.project_id} className="proyecto-card border">
-                  <p>Nombre: {proyecto.name}</p>
-                  <p>NOG: {nog}</p>
-                  <p>Fecha: {proyecto.date}</p>
-
-                  {tipoArchivo === "Fotos" && (
-                    <>
-                      <img
-                        src={proyecto.uploadedFile}
-                        alt={`Imagen de ${proyecto.name}`}
-                        width="200"
-                        height="200"
-                      />
-                      <div className="d-flex justify-content-around">
-                        <Button
-                          variant="primary"
-                          onClick={() => setArchivoSeleccionado(proyecto)}
-                        >
-                          Ver Imagen
-                        </Button>
-                      </div>
-                    </>
-                  )}
-
-                  {tipoArchivo === "Videos" && (
-                    <>
-                      <video width="200" height="200" controls>
-                        <source
-                          src={proyecto.uploadedFile}
-                          type="video/mp4"
-                        />
-                        Tu navegador no soporta el tag de video.
-                      </video>
-                      <div className="d-flex justify-content-around">
-                        <Button
-                          variant="primary"
-                          onClick={() => setArchivoSeleccionado(proyecto)}
-                        >
-                          Ver Video
-                        </Button>
-                      </div>
-                    </>
-                  )}
-                </div>
-              ))
-            ) : (
-              <p>
-                {tipoArchivo === "Fotos"
-                  ? "No hay imágenes disponibles"
-                  : "No hay videos disponibles"}
-              </p>
+          <div className="proyectos-container container-fluid">
+            {tipoArchivo === "Videos" && (
+              <ComponenteA proyectoID={proyectoID} updateCounter={updateCounter} />
+            )}
+            {tipoArchivo === "Fotos" && (
+              <ComponenteB proyectoID={proyectoID}  updateCounter={updateCounter}/>
             )}
           </div>
-        </div>
       </div>
 
       {/* Modal para mostrar la imagen o el video */}
-      <Modal show={archivoSeleccionado !== null} onHide={handleCloseModal} centered>
+      <Modal
+        show={archivoSeleccionado !== null}
+        onHide={handleCloseModal}
+        centered
+      >
         <Modal.Header closeButton>
-          <Modal.Title>{tipoArchivo === "Fotos" ? "Imagen" : "Video"}</Modal.Title>
+          <Modal.Title>
+            {tipoArchivo === "Fotos" ? "Imagen" : "Video"}
+          </Modal.Title>
         </Modal.Header>
         <Modal.Body>
           {tipoArchivo === "Fotos" && (
