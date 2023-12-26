@@ -17,11 +17,10 @@ const ComponenteA = ({ proyectoID,updateCounter }) => {
 
   useEffect(() => {
     fetchProyectos();
-  }, [proyectoID, updateCounter]); // Añade updateCounter a las dependencias del efecto
+  }, [proyectoID, updateCounter]); 
 
   return (
     <div className='proyecto-card'>
-      <h2>Videos</h2>
       {proyectos.map((pkP) => (
         <div key={pkP.id} className="card">
           <video width="100%" height="auto" controls>

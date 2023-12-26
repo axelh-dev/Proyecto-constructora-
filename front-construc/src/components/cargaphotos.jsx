@@ -1,9 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import "../Estilos/photosvideos.scss";
 import axios from 'axios';
+import Modal from 'react-bootstrap/Modal'; // Asegúrate de tener el componente Modal de Bootstrap
+import Button from 'react-bootstrap/Button';
 
 const ComponenteB = ({ proyectoID, updateCounter }) => {
   const [proyectos, setProyectos] = useState([]);
+  const [selectedImage, setSelectedImage] = useState(null);
 
   const fetchProyectos = async () => {
     try {
@@ -18,20 +21,47 @@ const ComponenteB = ({ proyectoID, updateCounter }) => {
 
   useEffect(() => {
     fetchProyectos();
-  }, [proyectoID, updateCounter]); // Añade updateCounter a las dependencias del efecto
+  }, [proyectoID, updateCounter]);
+
+  const openModal = (image) => {
+    setSelectedImage(image);
+  };
+
+  const closeModal = () => {
+    setSelectedImage(null);
+  };
 
   return (
     <div className='proyectos-container container-fluid'>
-    {proyectos.map((pkP) => (
-      <div key={pkP.id} className="card ">  
-        {console.log(pkP.uploadedFile)}
-        <img src={"http://localhost:8000/"+pkP.uploadedFile} alt={pkP.name} className="card-img-top" />
-        <div className="card-body">
-          <p className="card-text">{pkP.name}</p>
+      {proyectos.map((pkP) => (
+        <div key={pkP.id} className="card" onClick={() => openModal(pkP.uploadedFile)}>
+          <img src={"http://localhost:8000/"+pkP.uploadedFile} alt={pkP.name} className="card-img-top" />
+          <div className="card-body">
+            <p className="card-text">{pkP.name}</p>
+          </div>
         </div>
-      </div>
-    ))}
-  </div>
+      ))}
+
+      {selectedImage && (
+        <Modal show={true} onHide={closeModal} centered>
+          <Modal.Header closeButton>
+            <Modal.Title>Imagen</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <img
+              src={`http://localhost:8000/${selectedImage}`}
+              alt={`Imagen de ${selectedImage}`}
+              width="100%"
+            />
+          </Modal.Body>
+          <Modal.Footer>
+            <Button variant="secondary" onClick={closeModal}>
+              Cerrar
+            </Button>
+          </Modal.Footer>
+        </Modal>
+      )}
+    </div>
   );
 };
 
