@@ -22,7 +22,7 @@ class AppUserManager(BaseUserManager):
 class municipalidad(models.Model):
     munici_id = models.BigAutoField(primary_key=True)
     name = models.CharField(max_length=50, null=False)
-    uploadedFile = models.FileField(upload_to="image/", default='C:/Users/axelh/Downloads/imgxd.jpg')
+    uploadedFile = models.FileField(upload_to="image/", default="NULL")
     
     def __str__(self):
         return f"User: {self.name}"
@@ -77,7 +77,7 @@ class Photos(models.Model):
     id = models.BigAutoField(primary_key=True)
     project_id = models.ForeignKey(Projects, on_delete=models.CASCADE, related_name='photos')
     name = models.CharField(max_length=200, null=False)
-    uploadedFile = models.FileField(upload_to="image/", default='C:/Users/axelh/Downloads/imgxd.jpg')
+    uploadedFile = models.FileField(upload_to="image/", default="NULL")
 
     def __str__(self):
         return f"Photo: {self.name}"
@@ -86,7 +86,7 @@ class Videos(models.Model):
     id = models.BigAutoField(primary_key=True)
     project_id = models.ForeignKey(Projects, on_delete=models.CASCADE, related_name='videos')
     name = models.CharField(max_length=200, null=False)
-    uploadedFile = models.FileField(upload_to="Videos/",  default='C:/Users/axelh/Downloads/imgxd.jpg')
+    uploadedFile = models.FileField(upload_to="Videos/", default="NULL")
 
     def __str__(self):
         return f"Video: {self.name}"

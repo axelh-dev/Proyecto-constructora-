@@ -59,7 +59,6 @@ const AdminPage = (props) => {
       const formData = new FormData();
       formData.append("name", nombreMuni);
   
-      // Si hay una imagen seleccionada, la agregamos al formulario
       if (archivoProyecto) {
         formData.append("uploadedFile", archivoProyecto);
       }
@@ -200,8 +199,8 @@ const AdminPage = (props) => {
                 <div
                   key={muni.munici_id}
                   className="municipalidad-card border"
-                >
-                  <img src={muni.uploadedFile || logo} alt="img_muni" />
+                > 
+                  <img src={muni.uploadedFile === "http://localhost:8000/media/NULL" ? logo : muni.uploadedFile} alt="img_muni" />
                   <p>{muni.name}</p>
                   <button
                     type="button"
