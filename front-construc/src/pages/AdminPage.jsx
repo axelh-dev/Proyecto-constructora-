@@ -10,6 +10,9 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "../Estilos/AdminStyles.scss";
 import logo from "../assets/logo.svg";
 import { useNavigate } from "react-router-dom";
+import Dropdown from "react-bootstrap/Dropdown";
+import NavDropdown from "react-bootstrap/NavDropdown";
+import icon from "../assets/icon.svg";
 
 const AdminPage = (props) => {
   const navigate = useNavigate();
@@ -24,7 +27,6 @@ const AdminPage = (props) => {
   const [contrasenaUsuario, setContrasenaUsuario] = useState("");
   const [selectedMunicipioId, setSelectedMunicipioId] = useState("");
   const [archivoProyecto, setArchivoProyecto] = useState(null);
-  const [logoMuni, setLogoMuni] = useState(""); // Nueva línea para almacenar la URL de la imagen
   const role_id_fija = 2;
 
   useEffect(() => {
@@ -55,24 +57,24 @@ const AdminPage = (props) => {
         console.log("El campo nombreMuni está vacío");
         return;
       }
-  
+
       const formData = new FormData();
       formData.append("name", nombreMuni);
-  
+
       if (archivoProyecto) {
         formData.append("uploadedFile", archivoProyecto);
       }
-  
+
       const endPoint = "http://localhost:8000/api/v1/municipalidades/";
       const response = await axios.post(endPoint, formData);
-  
+
       if (response.status === 201) {
         console.log("Municipalidad creada exitosamente");
         setMunicipalidades((prevMunicipalidades) => [
           ...prevMunicipalidades,
           response.data,
         ]);
-  
+
         // Actualizar el estado con la URL de la imagen de la municipalidad
         setLogoMuni(response.data.uploadedFile || logo);
       } else {
@@ -88,8 +90,8 @@ const AdminPage = (props) => {
       setArchivoProyecto(null);
     }
   };
-  
-  
+
+
 
   const handleGuardarUser = async () => {
     try {
@@ -145,6 +147,32 @@ const AdminPage = (props) => {
     }
   };
 
+  const handleDelete = async (municipioId) => {
+    // Implementa la lógica para eliminar el municipio según el municipioId
+    // Esta función es llamada cuando se selecciona la opción "Eliminar"
+    try {
+      const response = await axios.delete(
+        `http://127.0.0.1:8000/api/v1/municipalidades/${municipioId}/`
+      );
+  
+      if (response.status === 200) {
+        console.log("Municipio eliminado exitosamente");
+        // Actualiza el estado para reflejar el cambio
+        setMunicipalidades((prevMunicipalidades) =>
+          prevMunicipalidades.filter((muni) => muni.munici_id !== municipioId)
+        );
+      } else {
+        console.error(
+          "Error al eliminar el municipio. Estado de la respuesta:",
+          response.status
+        );
+      }
+    } catch (error) {
+      console.error("Error en la solicitud DELETE:", error.message);
+    }
+  };
+
+
   return (
     <>
       <Navbar expand="md" bg="light" data-bs-theme="light">
@@ -199,9 +227,26 @@ const AdminPage = (props) => {
                 <div
                   key={muni.munici_id}
                   className="municipalidad-card border"
-                > 
+                  style={{ position: "relative" }}
+                >
                   <img src={muni.uploadedFile === "http://localhost:8000/media/NULL" ? logo : muni.uploadedFile} alt="img_muni" />
                   <p>{muni.name}</p>
+                  <NavDropdown
+                    id="dropdown-basic-button"
+                    title={<img src={icon} alt="Icon" />} // Usa el ícono importado
+                    className="menu-carfa"
+                    style={{
+                      position: "absolute",
+                      bottom: "-2px",
+                      left: "330px",
+                      margin: "10px",
+
+                    }}
+                  >
+                    <Dropdown.Item onClick={() => handleDelete(muni.munici_id)}>
+                      Eliminar
+                    </Dropdown.Item>
+                  </NavDropdown>
                   <button
                     type="button"
                     className="btn btn-primary"
@@ -218,6 +263,7 @@ const AdminPage = (props) => {
                   >
                     Ir a la Municipalidad
                   </button>
+
                 </div>
               ))}
             </div>
