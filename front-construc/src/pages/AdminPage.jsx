@@ -187,10 +187,6 @@ const AdminPage = (props) => {
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse className="justify-content-end">
             <Nav className="me-auto">
-              <Navbar.Text>
-                Municipalidad:{" "}
-                <a className="text-capitalize mx-2 fw-bold">{municipio}</a>
-              </Navbar.Text>
             </Nav>
             <Nav>
               <Navbar.Text>

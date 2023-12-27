@@ -11,6 +11,9 @@ import logo from "../assets/logo.svg";
 import carpeta from "../assets/carpeta.png";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import Dropdown from "react-bootstrap/Dropdown";
+import NavDropdown from "react-bootstrap/NavDropdown";
+import icon from "../assets/icon.svg";
 
 const PageProyectos = (props) => {
   const location = useLocation();
@@ -91,6 +94,27 @@ const PageProyectos = (props) => {
       setShowModal(false);
     }
   };
+
+  const handleDelete = async (proyectoId) => {
+    try {
+      const response = await axios.delete(
+        `http://127.0.0.1:8000/api/v1/projects/${proyectoId}/`
+      );
+
+      if (response.status === 204) {
+        console.log("Proyecto eliminado exitosamente");
+        setProyectos((prevProyectos) =>
+          prevProyectos.filter((proyecto) => proyecto.project_id !== proyectoId)
+        );
+      } else {
+        console.error(
+          `Error al eliminar el proyecto. Estado de la respuesta: ${response.status}`
+        );
+      }
+    } catch (error) {
+      console.error("Error en la solicitud DELETE:", error.message);
+    }
+  };
   return (
     <>
       <Navbar expand="md" bg="light" data-bs-theme="light">
@@ -140,7 +164,7 @@ const PageProyectos = (props) => {
           <div className="proyectos-container">
             {proyectos && proyectos.length > 0 ? (
               proyectos.map((proyecto) => (
-                <div key={proyecto.project_id} className="proyecto-card border">
+                <div key={proyecto.project_id} className="proyecto-card border" style={{ position: "relative" }}>
                   <img
                     src={carpeta}
                     width="200"
@@ -151,6 +175,22 @@ const PageProyectos = (props) => {
                   <p>Nombre: {proyecto.name}</p>
                   <p>NOG: {proyecto.nog}</p>
                   <p>Fecha: {proyecto.date}</p>
+                  <NavDropdown
+                    id="dropdown-basic-button"
+                    title={<img src={icon} alt="Icon" />} // Usa el ícono importado
+                    className="menu-carfa"
+                    style={{
+                      position: "absolute",
+                      bottom: "12px",
+                      left: "330px",
+                      margin: "10px",
+
+                    }}
+                  >
+                    <Dropdown.Item onClick={() => handleDelete(proyecto.project_id)}>
+                      Eliminar
+                    </Dropdown.Item>
+                  </NavDropdown>
                   <button
                     type="button"
                     className="btn btn-primary"
