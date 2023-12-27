@@ -76,7 +76,7 @@ const AdminPage = (props) => {
         ]);
 
         // Actualizar el estado con la URL de la imagen de la municipalidad
-        setLogoMuni(response.data.uploadedFile || logo);
+        //setLogoMuni(response.data.uploadedFile || logo);
       } else {
         console.error(
           "Error al crear la municipalidad. Estado de la respuesta:",
@@ -155,7 +155,7 @@ const AdminPage = (props) => {
         `http://127.0.0.1:8000/api/v1/municipalidades/${municipioId}/`
       );
   
-      if (response.status === 200) {
+      if (response.status === 204) {
         console.log("Municipio eliminado exitosamente");
         // Actualiza el estado para reflejar el cambio
         setMunicipalidades((prevMunicipalidades) =>
@@ -163,8 +163,7 @@ const AdminPage = (props) => {
         );
       } else {
         console.error(
-          "Error al eliminar el municipio. Estado de la respuesta:",
-          response.status
+          `Error al eliminar el municipio. Estado de la respuesta: ${response.status}`
         );
       }
     } catch (error) {
