@@ -6,10 +6,13 @@ import Dropdown from "react-bootstrap/Dropdown";
 import NavDropdown from "react-bootstrap/NavDropdown";
 import icon from "../assets/icon.svg";
 
-const ComponenteA = ({ proyectoID, updateCounter1 }) => {
+const ComponenteA = ({ proyectoID, updateCounter1, role }) => {
   const [proyectos, setProyectos] = useState([]);
   const [selectedVideo, setSelectedVideo] = useState(null);
   const videoRef = useRef(null); // Referencia al elemento de video en el fondo
+
+
+  console.log(role)
   const fetchProyectos = async () => {
     try {
       const archivosEndpoint = `http://localhost:8000/api/proyectosfv/${proyectoID}`;

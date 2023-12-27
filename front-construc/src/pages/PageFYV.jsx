@@ -18,7 +18,6 @@ const PageFYV = (props) => {
   const location = useLocation();
   const { usuario, municipio, role, Muni_id, proyectoID, nog } =
     location.state || {};
-
   const [showModal, setShowModal] = useState(false);
   const [tipoArchivo, setTipoProyecto] = useState("Fotos");
   const [archivoProyecto, setArchivoProyecto] = useState(null);
@@ -168,10 +167,10 @@ const PageFYV = (props) => {
           {tipoArchivo === "Videos" && <p>Vista de Videos</p>}
           </div>
             {tipoArchivo === "Videos" && (
-              <ComponenteA proyectoID={proyectoID} updateCounter={updateCounter} />
+              <ComponenteA proyectoID={proyectoID} updateCounter={updateCounter}  role={role}/>
             )}
             {tipoArchivo === "Fotos" && (
-              <ComponenteB proyectoID={proyectoID}  updateCounter1={updateCounter1}/>
+              <ComponenteB proyectoID={proyectoID}  updateCounter1={updateCounter1} role={role}/>
             )}
       </div>
 
