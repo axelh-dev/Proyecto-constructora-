@@ -72,6 +72,7 @@ const ComponenteA = ({ proyectoID, updateCounter1, role }) => {
               <source src={`http://localhost:8000/${pkP.uploadedFile}`} type="video/mp4" />
               Tu navegador no soporta el tag de video.
             </video>
+            {role === "admin" && (
             <NavDropdown
                 id="dropdown-basic-button"
                 title={<img src={icon} alt="Icon" />} // Usa el ícono importado
@@ -87,6 +88,7 @@ const ComponenteA = ({ proyectoID, updateCounter1, role }) => {
                   Eliminar
                 </Dropdown.Item>
               </NavDropdown>
+              )}
           </div>
         ))
       )}

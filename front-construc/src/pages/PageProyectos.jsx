@@ -175,6 +175,7 @@ const PageProyectos = (props) => {
                   <p>Nombre: {proyecto.name}</p>
                   <p>NOG: {proyecto.nog}</p>
                   <p>Fecha: {proyecto.date}</p>
+                  {role === "admin" && (
                   <NavDropdown
                     id="dropdown-basic-button"
                     title={<img src={icon} alt="Icon" />} // Usa el ícono importado
@@ -191,6 +192,7 @@ const PageProyectos = (props) => {
                       Eliminar
                     </Dropdown.Item>
                   </NavDropdown>
+                  )}
                   <button
                     type="button"
                     className="btn btn-primary"

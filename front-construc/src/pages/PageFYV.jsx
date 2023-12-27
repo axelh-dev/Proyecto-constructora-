@@ -70,11 +70,11 @@ const PageFYV = (props) => {
       if (tipoArchivo === "Fotos" && response.status === 201) {
         console.log("Archivo de fotos creado exitosamente");
         setUpdateCounter((prevCounter) => prevCounter + 1);
-        console.log(setUpdateCounter)
+        //console.log(setUpdateCounter)
       } else if (tipoArchivo === "Videos" && response.status === 201) {
         console.log("Archivo de videos creado exitosamente");
         setUpdateCounter1((prevCounter1) => prevCounter1 + 1);
-        console.log(setUpdateCounter1)
+        //console.log(setUpdateCounter1)
       } else {
         console.error(
           "Error al crear el archivo. Estado de la respuesta:",
@@ -162,16 +162,19 @@ const PageFYV = (props) => {
       </Navbar>
       
       <div className="content-pro">
-        <div className="Titulo">  
+        <div className="Titulo">
           {tipoArchivo === "Fotos" && <p>Vista de Imágenes</p>}
           {tipoArchivo === "Videos" && <p>Vista de Videos</p>}
-          </div>
-            {tipoArchivo === "Videos" && (
-              <ComponenteA proyectoID={proyectoID} updateCounter={updateCounter}  role={role}/>
-            )}
-            {tipoArchivo === "Fotos" && (
-              <ComponenteB proyectoID={proyectoID}  updateCounter1={updateCounter1} role={role}/>
-            )}
+        </div>
+        {tipoArchivo === "Videos" && (
+          <ComponenteA proyectoID={proyectoID} updateCounter1={updateCounter1} role={role} />
+        )}
+        {tipoArchivo === "Fotos" && (
+          <>
+            {console.log("Valor de updateCounter1 en PageFYV:", updateCounter)}
+            <ComponenteB proyectoID={proyectoID} updateCounter={updateCounter} role={role} />
+          </>
+        )}
       </div>
 
       

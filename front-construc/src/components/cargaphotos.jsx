@@ -7,11 +7,13 @@ import Dropdown from "react-bootstrap/Dropdown";
 import NavDropdown from "react-bootstrap/NavDropdown";
 import icon from "../assets/icon.svg";
 
-const ComponenteB = ({ proyectoID, updateCounter }) => {
+const ComponenteB = ({ proyectoID, updateCounter, role }) => {
   const [proyectos, setProyectos] = useState([]);
   const [selectedImage, setSelectedImage] = useState(null);
   const [loading, setLoading] = useState(true);
-  console.log(updateCounter);
+
+
+  console.log("Carga",updateCounter)
   const fetchProyectos = async () => {
     try {
       const archivosEndpoint = `http://localhost:8000/api/proyectosfp/${proyectoID}`;
@@ -71,6 +73,7 @@ const ComponenteB = ({ proyectoID, updateCounter }) => {
                 onClick={() => openModal(pkP.uploadedFile)}
                 className="mb-2"
               />
+               {role === "admin" && (
               <NavDropdown
                 id="dropdown-basic-button"
                 title={<img src={icon} alt="Icon" />} // Usa el ícono importado
@@ -86,6 +89,7 @@ const ComponenteB = ({ proyectoID, updateCounter }) => {
                   Eliminar
                 </Dropdown.Item>
               </NavDropdown>
+              )}
             </div>
           ))
         )
