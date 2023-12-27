@@ -13,7 +13,7 @@ import logo from "../assets/logo.svg";
 import axios from "axios";
 import ComponenteA from '../components/cargavideos';
 import ComponenteB from '../components/cargaphotos';
-import { useNavigate } from "react-router-dom";
+
 const PageFYV = (props) => {
   const location = useLocation();
   const { usuario, municipio, role, Muni_id, proyectoID, nog } =
@@ -22,10 +22,9 @@ const PageFYV = (props) => {
   const [showModal, setShowModal] = useState(false);
   const [tipoArchivo, setTipoProyecto] = useState("Fotos");
   const [archivoProyecto, setArchivoProyecto] = useState(null);
-  const [archivoSeleccionado, setArchivoSeleccionado] = useState(null);
   const [updateCounter, setUpdateCounter] = useState(0);
+  const [updateCounter1, setUpdateCounter1] = useState(0);
 
-  const navigate = useNavigate();
 
   useEffect(() => {
     document.title = `Proyectos en ${municipio}`;
@@ -37,7 +36,6 @@ const PageFYV = (props) => {
 
   const handleCloseModal = () => {
     setShowModal(false);
-    setArchivoSeleccionado(null);
   };
 
   const handleCerrarSesion = async () => {
@@ -52,10 +50,10 @@ const PageFYV = (props) => {
   const handleGuardarArchivo = async () => {
     try {
       console.log("Archivo seleccionado:", archivoProyecto.name);
-
+  
       let endpoint = "";
       let formData = new FormData();
-
+  
       if (tipoArchivo === "Fotos") {
         endpoint = "http://127.0.0.1:8000/api/v1/photos/";
         formData.append("project_id", proyectoID);
@@ -67,12 +65,17 @@ const PageFYV = (props) => {
         formData.append("name", archivoProyecto.name);
         formData.append("uploadedFile", archivoProyecto);
       }
-
+      
       const response = await axios.post(endpoint, formData);
-
-      if (response.status === 201) {
-        console.log("Archivo creado exitosamente");
+  
+      if (tipoArchivo === "Fotos" && response.status === 201) {
+        console.log("Archivo de fotos creado exitosamente");
         setUpdateCounter((prevCounter) => prevCounter + 1);
+        console.log(setUpdateCounter)
+      } else if (tipoArchivo === "Videos" && response.status === 201) {
+        console.log("Archivo de videos creado exitosamente");
+        setUpdateCounter1((prevCounter1) => prevCounter1 + 1);
+        console.log(setUpdateCounter1)
       } else {
         console.error(
           "Error al crear el archivo. Estado de la respuesta:",
@@ -82,11 +85,16 @@ const PageFYV = (props) => {
     } catch (error) {
       console.error("Error en la solicitud POST:", error.message);
     } finally {
-      setTipoProyecto("Fotos");
+      if (tipoArchivo === "Fotos") {
+        setTipoProyecto("Fotos");
+      } else if (tipoArchivo === "Videos") {
+        setTipoProyecto("Videos");
+      }
       setArchivoProyecto(null);
       setShowModal(false);
     }
   };
+  
 
   return (
     <>
@@ -163,7 +171,7 @@ const PageFYV = (props) => {
               <ComponenteA proyectoID={proyectoID} updateCounter={updateCounter} />
             )}
             {tipoArchivo === "Fotos" && (
-              <ComponenteB proyectoID={proyectoID}  updateCounter={updateCounter}/>
+              <ComponenteB proyectoID={proyectoID}  updateCounter1={updateCounter1}/>
             )}
       </div>
 
