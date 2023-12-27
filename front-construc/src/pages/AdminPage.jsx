@@ -115,6 +115,7 @@ const AdminPage = (props) => {
         munici_id: selectedMunicipioId,
         role_id: role_id_fija,
       };
+      console.log(postData);
       const response = await axios.post(endPoint, postData);
 
       if (response.status === 201) {

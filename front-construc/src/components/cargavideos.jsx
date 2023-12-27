@@ -68,7 +68,7 @@ const ComponenteA = ({ proyectoID, updateCounter1, role }) => {
       ) : (
         proyectos.map((pkP) => (
           <div key={pkP.id} className="card" >
-            <video width="100%" height="auto" ref={videoRef} onClick={() => openModal(pkP.uploadedFile)}>
+            <video width="100%" height="auto" ref={videoRef} onClick={() => openModal(pkP.uploadedFile)} controls>
               <source src={`http://localhost:8000/${pkP.uploadedFile}`} type="video/mp4" />
               Tu navegador no soporta el tag de video.
             </video>
