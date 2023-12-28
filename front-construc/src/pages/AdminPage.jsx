@@ -16,7 +16,6 @@ import icon from "../assets/icon.svg";
 
 const AdminPage = (props) => {
   const navigate = useNavigate();
-
   const location = useLocation();
   const { usuario, municipio, role } = location.state || {};
   const [showModal, setShowModal] = useState(false);
@@ -27,6 +26,7 @@ const AdminPage = (props) => {
   const [contrasenaUsuario, setContrasenaUsuario] = useState("");
   const [selectedMunicipioId, setSelectedMunicipioId] = useState("");
   const [archivoProyecto, setArchivoProyecto] = useState(null);
+  const [errorArchivo, setErrorArchivo] = useState("");
   const role_id_fija = 2;
 
   useEffect(() => {
@@ -45,16 +45,36 @@ const AdminPage = (props) => {
 
   const handleOpenModal = () => {
     setShowModal(true);
+    setErrorArchivo("");
   };
 
   const handleCloseModal = () => {
     setShowModal(false);
+    setErrorArchivo("");
   };
 
-  const handleGuardarMuni = async () => {
+  const isImageFile = (file) => {
+    const imageExtensions = ["jpg", "jpeg", "png"];
+    const extension = file.name.split(".").pop().toLowerCase();
+    return imageExtensions.includes(extension);
+  };
+
+   const handleGuardarMuni = async () => {
     try {
-      if (!nombreMuni.trim()) {
-        console.log("El campo nombreMuni está vacío");
+      setErrorArchivo(""); // Limpiar el mensaje de error al intentar guardar
+
+      if (!archivoProyecto) {
+        setErrorArchivo(
+          "Campo de seleccion vacio"
+        );
+        return;
+      }
+
+      // Validar el tipo de archivo
+      if (archivoProyecto && !isImageFile(archivoProyecto)) {
+        setErrorArchivo(
+          "Archivo no es una imagen"
+        );
         return;
       }
 
@@ -74,9 +94,6 @@ const AdminPage = (props) => {
           ...prevMunicipalidades,
           response.data,
         ]);
-
-        // Actualizar el estado con la URL de la imagen de la municipalidad
-        //setLogoMuni(response.data.uploadedFile || logo);
       } else {
         console.error(
           "Error al crear la municipalidad. Estado de la respuesta:",
@@ -304,6 +321,7 @@ const AdminPage = (props) => {
                     onChange={(e) => setArchivoProyecto(e.target.files[0])}
                   />
                 </div>
+                {errorArchivo && <p className="error-message">{errorArchivo}</p>}
                 <Button
                   variant="primary"
                   className="GuardarButtonRight mt-2"
