@@ -8,11 +8,9 @@ import icon from "../assets/icon.svg";
 
 const ComponenteA = ({ proyectoID, updateCounter1, role }) => {
   const [proyectos, setProyectos] = useState([]);
-  const [selectedVideo, setSelectedVideo] = useState(null);
-  const videoRef = useRef(null); // Referencia al elemento de video en el fondo
+  const videoRefs = useRef({}); // Referencias a los elementos de video
 
 
-  console.log(role)
   const fetchProyectos = async () => {
     try {
       const archivosEndpoint = `http://localhost:8000/api/proyectosfv/${proyectoID}`;
@@ -23,7 +21,7 @@ const ComponenteA = ({ proyectoID, updateCounter1, role }) => {
         setProyectos(archivos);
       } else {
         console.error("La respuesta de la API no es un array:", archivos);
-        setProyectos([]); // Establecer un array vacío como valor predeterminado
+        setProyectos([]);
       }
     } catch (error) {
       console.error("Error al obtener la lista de proyectos", error);
@@ -31,8 +29,6 @@ const ComponenteA = ({ proyectoID, updateCounter1, role }) => {
   };
 
   const handleDelete = async (id) => {
-
-
     try {
       await axios.delete(`http://localhost:8000/api/v1/videos/${id}/`);
       console.log(`Video con ID ${id} eliminado exitosamente.`);
@@ -47,40 +43,32 @@ const ComponenteA = ({ proyectoID, updateCounter1, role }) => {
     fetchProyectos();
   }, [proyectoID, updateCounter1]);
 
-  const openModal = (video) => {
-    setSelectedVideo(video);
-    if (videoRef.current) {
-      videoRef.current.pause();
-    }
-  };
-
-  const closeModal = () => {
-    setSelectedVideo(null);
-    if (videoRef.current) {
-      videoRef.current.play();
-    }
-  };
-
   return (
     <div className="proyectos-container container-fluid">
       {proyectos.length === 0 ? (
         <p>No hay videos disponibles</p>
       ) : (
         proyectos.map((pkP) => (
-          <div key={pkP.id} className="card" >
-            <video width="100%" height="auto" ref={videoRef} onClick={() => openModal(pkP.uploadedFile)} controls>
+          <div key={pkP.id} className="card">
+            <video
+              width="100%"
+              height="auto"
+              ref={(el) => (videoRefs.current[pkP.id] = el)}
+              controls
+              muted // Silencio por defecto
+            >
               <source src={`http://localhost:8000/${pkP.uploadedFile}`} type="video/mp4" />
               Tu navegador no soporta el tag de video.
             </video>
             {role === "admin" && (
-            <NavDropdown
+              <NavDropdown
                 id="dropdown-basic-button"
                 title={<img src={icon} alt="Icon" />} // Usa el ícono importado
                 className="menu-carfa"
                 style={{
                   position: "absolute",
-                  bottom: 0,
-                  left: "180px",
+                  bottom: "10px",
+                  left: "80%",
                   margin: "10px",
                 }}
               >
@@ -88,28 +76,9 @@ const ComponenteA = ({ proyectoID, updateCounter1, role }) => {
                   Eliminar
                 </Dropdown.Item>
               </NavDropdown>
-              )}
+            )}
           </div>
         ))
-      )}
-
-      {selectedVideo && (
-        <Modal show={true} onHide={closeModal} centered>
-          <Modal.Header closeButton>
-            <Modal.Title>Video</Modal.Title>
-          </Modal.Header>
-          <Modal.Body>
-            <video width="100%" height="auto" controls>
-              <source src={`http://localhost:8000/${selectedVideo}`} type="video/mp4" />
-              Tu navegador no soporta el tag de video.
-            </video>
-          </Modal.Body>
-          <Modal.Footer>
-            <Button variant="secondary" onClick={closeModal}>
-              Cerrar
-            </Button>
-          </Modal.Footer>
-        </Modal>
       )}
     </div>
   );

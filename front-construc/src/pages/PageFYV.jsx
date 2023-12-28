@@ -48,8 +48,6 @@ const PageFYV = (props) => {
 
   const handleGuardarArchivo = async () => {
     try {
-      console.log("Archivo seleccionado:", archivoProyecto.name);
-  
       let endpoint = "";
       let formData = new FormData();
   
@@ -171,7 +169,6 @@ const PageFYV = (props) => {
         )}
         {tipoArchivo === "Fotos" && (
           <>
-            {console.log("Valor de updateCounter1 en PageFYV:", updateCounter)}
             <ComponenteB proyectoID={proyectoID} updateCounter={updateCounter} role={role} />
           </>
         )}
