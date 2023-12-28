@@ -46,11 +46,13 @@ const AdminPage = (props) => {
   const handleOpenModal = () => {
     setShowModal(true);
     setErrorArchivo("");
+    setArchivoProyecto(null);
   };
 
   const handleCloseModal = () => {
     setShowModal(false);
     setErrorArchivo("");
+    setArchivoProyecto(null);
   };
 
   const isImageFile = (file) => {
@@ -59,37 +61,34 @@ const AdminPage = (props) => {
     return imageExtensions.includes(extension);
   };
 
-   const handleGuardarMuni = async () => {
+  const handleGuardarMuni = async () => {
     try {
-      setErrorArchivo(""); // Limpiar el mensaje de error al intentar guardar
-
+      setErrorArchivo("");
+  
       if (!archivoProyecto) {
-        setErrorArchivo(
-          "Campo de seleccion vacio"
-        );
+        setErrorArchivo("Campo de selección vacío");
         return;
       }
-
-      // Validar el tipo de archivo
-      if (archivoProyecto && !isImageFile(archivoProyecto)) {
-        setErrorArchivo(
-          "Archivo no es una imagen"
-        );
+  
+      if (!isImageFile(archivoProyecto)) {
+        setErrorArchivo("Archivo no es una imagen");
         return;
       }
-
+  
       const formData = new FormData();
       formData.append("name", nombreMuni);
-
+  
       if (archivoProyecto) {
         formData.append("uploadedFile", archivoProyecto);
       }
-
+  
       const endPoint = "http://localhost:8000/api/v1/municipalidades/";
       const response = await axios.post(endPoint, formData);
-
+  
       if (response.status === 201) {
         console.log("Municipalidad creada exitosamente");
+        setArchivoProyecto(null);
+        setErrorArchivo("");
         setMunicipalidades((prevMunicipalidades) => [
           ...prevMunicipalidades,
           response.data,
@@ -99,16 +98,18 @@ const AdminPage = (props) => {
           "Error al crear la municipalidad. Estado de la respuesta:",
           response.status
         );
+        setErrorArchivo("Error al crear la municipalidad");
       }
     } catch (error) {
       console.error("Error en la solicitud POST:", error.message);
+      setErrorArchivo("Error en la solicitud POST");
     } finally {
       setNombreMuni("");
-      setArchivoProyecto(null);
+      handleCloseModal();
+      
     }
   };
-
-
+  
 
   const handleGuardarUser = async () => {
     try {
@@ -172,7 +173,7 @@ const AdminPage = (props) => {
       const response = await axios.delete(
         `http://127.0.0.1:8000/api/v1/municipalidades/${municipioId}/`
       );
-  
+
       if (response.status === 204) {
         console.log("Municipio eliminado exitosamente");
         // Actualiza el estado para reflejar el cambio
@@ -189,7 +190,6 @@ const AdminPage = (props) => {
     }
   };
 
-
   return (
     <>
       <Navbar expand="md" bg="light" data-bs-theme="light">
@@ -204,8 +204,7 @@ const AdminPage = (props) => {
           </Navbar.Brand>
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse className="justify-content-end">
-            <Nav className="me-auto">
-            </Nav>
+            <Nav className="me-auto"></Nav>
             <Nav>
               <Navbar.Text>
                 Usuario:{" "}
@@ -242,7 +241,14 @@ const AdminPage = (props) => {
                   className="municipalidad-card border"
                   style={{ position: "relative" }}
                 >
-                  <img src={muni.uploadedFile === "http://localhost:8000/media/NULL" ? logo : muni.uploadedFile} alt="img_muni" />
+                  <img
+                    src={
+                      muni.uploadedFile === "http://localhost:8000/media/NULL"
+                        ? logo
+                        : muni.uploadedFile
+                    }
+                    alt="img_muni"
+                  />
                   <p>{muni.name}</p>
                   <NavDropdown
                     id="dropdown-basic-button"
@@ -253,7 +259,6 @@ const AdminPage = (props) => {
                       bottom: "-2px",
                       left: "80%",
                       margin: "10px",
-
                     }}
                   >
                     <Dropdown.Item onClick={() => handleDelete(muni.munici_id)}>
@@ -276,7 +281,6 @@ const AdminPage = (props) => {
                   >
                     Ir a la Municipalidad
                   </button>
-
                 </div>
               ))}
             </div>
@@ -321,7 +325,9 @@ const AdminPage = (props) => {
                     onChange={(e) => setArchivoProyecto(e.target.files[0])}
                   />
                 </div>
-                {errorArchivo && <p className="error-message">{errorArchivo}</p>}
+                {errorArchivo && (
+                  <p className="error-message">{errorArchivo}</p>
+                )}
                 <Button
                   variant="primary"
                   className="GuardarButtonRight mt-2"
