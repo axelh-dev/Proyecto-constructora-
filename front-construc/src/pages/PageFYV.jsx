@@ -11,8 +11,8 @@ import "../Estilos/PageProyectos.scss";
 import "../Estilos/photosvideos.scss";
 import logo from "../assets/logo.svg";
 import axios from "axios";
-import ComponenteA from '../components/cargavideos';
-import ComponenteB from '../components/cargaphotos';
+import ComponenteA from "../components/cargavideos";
+import ComponenteB from "../components/cargaphotos";
 
 const PageFYV = (props) => {
   const location = useLocation();
@@ -23,7 +23,6 @@ const PageFYV = (props) => {
   const [archivoProyecto, setArchivoProyecto] = useState(null);
   const [updateCounter, setUpdateCounter] = useState(0);
   const [updateCounter1, setUpdateCounter1] = useState(0);
-
 
   useEffect(() => {
     document.title = `Proyectos en ${municipio}`;
@@ -50,7 +49,7 @@ const PageFYV = (props) => {
     try {
       let endpoint = "";
       let formData = new FormData();
-  
+
       if (tipoArchivo === "Fotos") {
         endpoint = "http://127.0.0.1:8000/api/v1/photos/";
         formData.append("project_id", proyectoID);
@@ -62,9 +61,9 @@ const PageFYV = (props) => {
         formData.append("name", archivoProyecto.name);
         formData.append("uploadedFile", archivoProyecto);
       }
-      
+
       const response = await axios.post(endpoint, formData);
-  
+
       if (tipoArchivo === "Fotos" && response.status === 201) {
         console.log("Archivo de fotos creado exitosamente");
         setUpdateCounter((prevCounter) => prevCounter + 1);
@@ -91,7 +90,6 @@ const PageFYV = (props) => {
       setShowModal(false);
     }
   };
-  
 
   return (
     <>
@@ -108,11 +106,17 @@ const PageFYV = (props) => {
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse className="justify-content-end">
             <Nav className="me-auto">
-              <Navbar.Text>
-                Municipalidad:{" "}
-                <a className="text-capitalize mx-2 fw-bold">{municipio}</a>
-              </Navbar.Text>
-
+            <NavDropdown title="Información" id="basic-nav-dropdown">
+                <NavDropdown.Item>
+                  <span className="fw-bold">NOG:</span> {nog}
+                </NavDropdown.Item>
+                <NavDropdown.Item>
+                  <span className="fw-bold">Municipio:</span> {municipio}
+                </NavDropdown.Item>
+                <NavDropdown.Item>
+                  <span className="fw-bold">Usuario:</span> {usuario}
+                </NavDropdown.Item>
+              </NavDropdown>
               <NavDropdown
                 className=""
                 title="Visualizar"
@@ -134,12 +138,7 @@ const PageFYV = (props) => {
                 </NavDropdown.Item>
               </NavDropdown>
             </Nav>
-            <Nav>
-              <Navbar.Text>
-                Usuario:{" "}
-                <a className="text-capitalize mx-2 fw-bold">{usuario}</a>
-              </Navbar.Text>
-            </Nav>
+              
             <div className="d-flex justify-content-around ">
               {role === "admin" && (
                 <Button
@@ -158,23 +157,30 @@ const PageFYV = (props) => {
           </Navbar.Collapse>
         </Container>
       </Navbar>
-      
+
       <div className="content-pro">
         <div className="Titulo">
           {tipoArchivo === "Fotos" && <p>Vista de Imágenes</p>}
           {tipoArchivo === "Videos" && <p>Vista de Videos</p>}
         </div>
         {tipoArchivo === "Videos" && (
-          <ComponenteA proyectoID={proyectoID} updateCounter1={updateCounter1} role={role} />
+          <ComponenteA
+            proyectoID={proyectoID}
+            updateCounter1={updateCounter1}
+            role={role}
+          />
         )}
         {tipoArchivo === "Fotos" && (
           <>
-            <ComponenteB proyectoID={proyectoID} updateCounter={updateCounter} role={role} />
+            <ComponenteB
+              proyectoID={proyectoID}
+              updateCounter={updateCounter}
+              role={role}
+            />
           </>
         )}
       </div>
 
-      
       <Modal show={showModal} onHide={handleCloseModal} centered>
         <Modal.Header closeButton>
           <Modal.Title className="VentanaEmer1">Nuevo Proyecto</Modal.Title>

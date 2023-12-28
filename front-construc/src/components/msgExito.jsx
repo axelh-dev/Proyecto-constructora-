@@ -7,7 +7,7 @@ const DialogModal = ({ show, onClose }) => {
   return (
     <Modal show={show} onHide={onClose}
     style={{ zIndex: 9999,
-            color: "darkblue"
+            color: "#21201f"
     }}
     className='modal-dialog modal-dialog-centered'
     >
