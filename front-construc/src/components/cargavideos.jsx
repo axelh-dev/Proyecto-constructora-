@@ -1,7 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
 import axios from 'axios';
-import Modal from 'react-bootstrap/Modal';
-import Button from 'react-bootstrap/Button';
 import Dropdown from "react-bootstrap/Dropdown";
 import NavDropdown from "react-bootstrap/NavDropdown";
 import icon from "../assets/icon.svg";

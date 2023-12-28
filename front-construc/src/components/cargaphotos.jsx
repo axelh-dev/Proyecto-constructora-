@@ -1,17 +1,21 @@
 import React, { useEffect, useState } from "react";
 import "../Estilos/photosvideos.scss";
 import axios from "axios";
+import Modal from "react-bootstrap/Modal";
 import Button from "react-bootstrap/Button";
 import Dropdown from "react-bootstrap/Dropdown";
 import NavDropdown from "react-bootstrap/NavDropdown";
 import icon from "../assets/icon.svg";
-import DialogModal from "./msgExito";
+import DialogModal from '../components/msgExito';
 
 const ComponenteB = ({ proyectoID, updateCounter, role }) => {
   const [proyectos, setProyectos] = useState([]);
+  const [selectedImage, setSelectedImage] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [selectedImgID, setSelectedImgID] = useState(null);
   const [showDialog, setShowDialog] = useState(false);
-  const [selectedImageId, setSelectedImageId] = useState(null);
+
+  const [showDialogModal, setShowDialogModal] = useState(false);
 
   const fetchProyectos = async () => {
     try {
@@ -35,11 +39,11 @@ const ComponenteB = ({ proyectoID, updateCounter, role }) => {
   const handleDelete = async (id) => {
     try {
       await axios.delete(`http://localhost:8000/api/v1/photos/${id}/`);
-      setSelectedImageId(id); // Almacena la ID de la imagen eliminada
-      setShowDialog(true);
-      setProyectos((prevProyectos) =>
-        prevProyectos.filter((proyecto) => proyecto.id !== id)
-      );
+      console.log(`Foto con ID ${id} eliminada exitosamente.`);
+      setSelectedImage(null); // Cerrar el modal de imagen
+      setSelectedImgID(id)
+      setShowDialog(true); // Mostrar el DialogModal
+      setProyectos((prevProyectos) => prevProyectos.filter((proyecto) => proyecto.id !== id));
     } catch (error) {
       console.error(`Error al eliminar la foto con ID ${id}`, error);
     }
@@ -49,48 +53,75 @@ const ComponenteB = ({ proyectoID, updateCounter, role }) => {
     fetchProyectos();
   }, [proyectoID, updateCounter]);
 
+  const openModal = (image) => {
+    setSelectedImage(image);
+  };
+
   const closeModal = () => {
     setShowDialog(false);
-    setSelectedImageId(null); // Restablece la ID de la imagen seleccionada
+    setShowDialogModal(false);
+    setSelectedImage(null);
   };
 
   return (
     <div className="proyectos-container container-fluid">
       {loading ? (
         <p>Cargando...</p>
-      ) : Array.isArray(proyectos) && proyectos.length === 0 ? (
-        <p>No hay imágenes disponibles</p>
       ) : (
-        proyectos.map((pkP) => (
-          <div key={pkP.id} className="card" style={{ position: "relative" }}>
-            <img
-              src={`http://localhost:8000/${pkP.uploadedFile}`}
-              alt={pkP.name}
-              onClick={() => setShowDialog(false)} // No muestra directamente el DialogModal al hacer clic
-              className="mb-2"
-            />
-            {role === "admin" && (
-              <NavDropdown
-                id="dropdown-basic-button"
-                title={<img src={icon} alt="Icon" />}
-                className="menu-carfa"
-                style={{
-                  position: "absolute",
-                  bottom: "10px",
-                  left: "80%",
-                  margin: "10px",
-                }}
-              >
-                <Dropdown.Item onClick={() => handleDelete(pkP.id)}>
-                  Eliminar
-                </Dropdown.Item>
-              </NavDropdown>
-            )}
-          </div>
-        ))
+        Array.isArray(proyectos) && proyectos.length === 0 ? (
+          <p>No hay imágenes disponibles</p>
+        ) : (
+          proyectos.map((pkP) => (
+            <div key={pkP.id} className="card" style={{ position: "relative" }}>
+              <img
+                src={`http://localhost:8000/${pkP.uploadedFile}`}
+                alt={pkP.name}
+                onClick={() => openModal(pkP.uploadedFile)}
+                className="mb-2"
+              />
+              {role === "admin" && (
+                <NavDropdown
+                  id="dropdown-basic-button"
+                  title={<img src={icon} alt="Icon" />}
+                  className="menu-carfa"
+                  style={{
+                    position: "absolute",
+                    bottom: "10px",
+                    left: "80%",
+                    margin: "10px",
+                  }}
+                >
+                  <Dropdown.Item onClick={() => handleDelete(pkP.id)}>
+                    Eliminar
+                  </Dropdown.Item>
+                </NavDropdown>
+              )}
+            </div>
+          ))
+        )
       )}
-      {selectedImageId && (
-        <DialogModal show={showDialog} onClose={closeModal} />
+      {selectedImage && (
+        <Modal show={true} onHide={closeModal} centered>
+          <Modal.Header closeButton>
+            <Modal.Title>Imagen</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <img
+              src={`http://localhost:8000/${selectedImage}`}
+              alt={`Imagen de ${selectedImage}`}
+              width="100%"
+            />
+          </Modal.Body>
+          <Modal.Footer>
+            <Button variant="secondary" onClick={closeModal}>
+              Cerrar
+            </Button>
+          </Modal.Footer>
+        </Modal>
+      )}
+
+      {selectedImgID && (
+        <DialogModal show={showDialog} onClose={closeModal}/> 
       )}
     </div>
   );

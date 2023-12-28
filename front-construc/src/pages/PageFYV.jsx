@@ -16,7 +16,7 @@ import ComponenteB from "../components/cargaphotos";
 
 const PageFYV = (props) => {
   const location = useLocation();
-  const { usuario, municipio, role, Muni_id, proyectoID, nog } =
+  const { usuario, municipio, role, Muni_id, proyectoID, nog, proyecto } =
     location.state || {};
   const [showModal, setShowModal] = useState(false);
   const [tipoArchivo, setTipoProyecto] = useState("Fotos");
@@ -107,6 +107,9 @@ const PageFYV = (props) => {
           <Navbar.Collapse className="justify-content-end">
             <Nav className="me-auto">
             <NavDropdown title="Información" id="basic-nav-dropdown">
+                <NavDropdown.Item>Proyecto:{"  "}
+                  <span className="fw-bold">{proyecto}</span> 
+                </NavDropdown.Item>
                 <NavDropdown.Item>NOG:{"  "}
                   <span className="fw-bold">{nog}</span> 
                 </NavDropdown.Item>

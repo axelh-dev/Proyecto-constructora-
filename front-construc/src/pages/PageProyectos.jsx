@@ -14,6 +14,7 @@ import { useNavigate } from "react-router-dom";
 import Dropdown from "react-bootstrap/Dropdown";
 import NavDropdown from "react-bootstrap/NavDropdown";
 import icon from "../assets/icon.svg";
+import DialogModal from '../components/msgExito'; // Importa el componente DialogModal
 
 const PageProyectos = (props) => {
   const location = useLocation();
@@ -23,7 +24,8 @@ const PageProyectos = (props) => {
   const [nombreProyecto, setNombreProyecto] = useState("");
   const [nogProyecto, setNogProyecto] = useState("");
   const [fechaProyecto, setFechaProyecto] = useState("");
-
+  const [showDialog, setShowDialog] = useState(false);
+  const [selectedProjectId, setSelectedProjectId] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -53,9 +55,6 @@ const PageProyectos = (props) => {
     try {
       const endpoint = "http://127.0.0.1:8000/api/logout/";
       await axios.post(endpoint);
-
-      // Redirige a la página de inicio de sesión u otra página después de cerrar sesión
-      // Puedes ajustar la ruta según tus necesidades
       navigate("/");
     } catch (error) {
       console.error("Error al cerrar sesión:", error.message);
@@ -103,6 +102,8 @@ const PageProyectos = (props) => {
 
       if (response.status === 204) {
         console.log("Proyecto eliminado exitosamente");
+        setSelectedProjectId(proyectoId);
+        setShowDialog(true);
         setProyectos((prevProyectos) =>
           prevProyectos.filter((proyecto) => proyecto.project_id !== proyectoId)
         );
@@ -115,6 +116,7 @@ const PageProyectos = (props) => {
       console.error("Error en la solicitud DELETE:", error.message);
     }
   };
+
   return (
     <>
       <Navbar expand="md" bg="light" data-bs-theme="light">
@@ -158,6 +160,9 @@ const PageProyectos = (props) => {
           </Navbar.Collapse>
         </Container>
       </Navbar>
+      {selectedProjectId && (
+        <DialogModal show={showDialog} onClose={() => setShowDialog(false)} />
+      )}
       <div className="content-pro">
         <div className="Titulo">
           <p>LISTA DE PROYECTOS</p>
@@ -182,8 +187,8 @@ const PageProyectos = (props) => {
                     className="menu-carfa"
                     style={{
                       position: "absolute",
-                      bottom: "12px",
-                      left: "330px",
+                      bottom: "10px",
+                      left: "80%",
                       margin: "10px",
 
                     }}
@@ -219,6 +224,7 @@ const PageProyectos = (props) => {
           </div>
         </div>
       </div>
+     
       <Modal show={showModal} onHide={handleCloseModal} centered>
         <Modal.Header closeButton>
           <Modal.Title className="VentanaEmer1">Nuevo Proyecto</Modal.Title>
