@@ -76,16 +76,22 @@ $color-link-hover: black;
   margin: 0;
 }
 
-/* Estilos adicionales para dispositivos más pequeños (ajustar según sea necesario) */
+
 @media only screen and (max-width: 1200px) {
-  .municipalidad-card {
-    flex-basis: calc(50% - 20px); /* Dos columnas en pantallas medianas */
+ .municipalidad-card {
+    flex-basis: calc(40% - 20px); /* Dos columnas en pantallas medianas */
   }
 }
 
-@media only screen and (max-width: 768px) {
-  .municipalidad-card {
-    flex-basis: calc(100% - 20px); /* Una columna en pantallas pequeñas */
+@media only screen and (max-width: 757px) {
+ .municipalidad-card {
+    flex-basis: calc(50% - 20px); /* Dos proyectos por línea en pantallas medianas */
+  }
+}
+/* Estilos adicionales para dispositivos pequeños (ajustar según sea necesario) */
+@media only screen and (max-width: 480px) {
+ .municipalidad-card {
+    flex-basis: calc(100% ); /* Un proyecto por línea en pantallas pequeñas */
   }
 }
 

@@ -10,18 +10,22 @@
 }
 
 .login-container {
+  background-color: rgb(40, 42, 54, .9);
   max-width: 300px;
   width: 100%;
   padding: 30px;
   border: 1px solid #ccc;
   border-radius: 8px;
-  background-color: #6a4d4de9, .8;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 
   h2 {
+    padding: 10px;
+    background-color: rgb(40, 42, 54, .6);
+    border-radius: 10px;
     font-size: 1.5rem;
+    font-weight: 700;
+    text-align: center;
     margin-bottom: 20px;
-    color: #1877f2;
+    color: #ffffff;
   }
 
   form {
@@ -30,8 +34,13 @@
     align-items: center;
 
     label {
+      text-align: center;
+      padding-left: 10px;
+      width: 100%;
+      background-color: rgb(40, 42, 54, .6);
+      border-radius: 10px;
       margin-bottom: 8px;
-      color: red;
+      color: rgb(255, 255, 255);
       font-weight: bold;
     }
 

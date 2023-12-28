@@ -14,11 +14,12 @@ import { useNavigate } from "react-router-dom";
 import Dropdown from "react-bootstrap/Dropdown";
 import NavDropdown from "react-bootstrap/NavDropdown";
 import icon from "../assets/icon.svg";
-import DialogModal from '../components/msgExito'; // Importa el componente DialogModal
+import DialogModal from "../components/msgExito"; // Importa el componente DialogModal
 
 const PageProyectos = (props) => {
   const location = useLocation();
-  const { usuario, municipio, role, municipioName, Muni_id } = location.state || {};
+  const { usuario, municipio, role, municipioName, Muni_id } =
+    location.state || {};
   const [showModal, setShowModal] = useState(false);
   const [proyectos, setProyectos] = useState([]);
   const [nombreProyecto, setNombreProyecto] = useState("");
@@ -74,7 +75,9 @@ const PageProyectos = (props) => {
       if (response.status === 201) {
         console.log("Proyecto creado exitosamente");
         setProyectos((prevProyectos) => {
-          const newArray = Array.isArray(prevProyectos) ? [...prevProyectos] : [];
+          const newArray = Array.isArray(prevProyectos)
+            ? [...prevProyectos]
+            : [];
           newArray.push(response.data);
           return newArray;
         });
@@ -165,11 +168,15 @@ const PageProyectos = (props) => {
       )}
       <div className="content-pro">
         <div className="Titulo">
-          <p>LISTA DE PROYECTOS</p>
+          <p className="titulo-1">LISTA DE PROYECTOS</p>
           <div className="proyectos-container">
             {proyectos && proyectos.length > 0 ? (
               proyectos.map((proyecto) => (
-                <div key={proyecto.project_id} className="proyecto-card border" style={{ position: "relative" }}>
+                <div
+                  key={proyecto.project_id}
+                  className="proyecto-card border"
+                  style={{ position: "relative" }}
+                >
                   <img
                     src={carpeta}
                     width="200"
@@ -177,27 +184,32 @@ const PageProyectos = (props) => {
                     className="d-inline-block align-top"
                     alt="Logo Constructora"
                   />
-                  <p>Nombre: {proyecto.name}</p>
-                  <p>NOG: {proyecto.nog}</p>
-                  <p>Fecha: {proyecto.date}</p>
+                  <div className="container-pro">
+                    <p className="item-pro">Nombre: {proyecto.name}</p>
+                    <p className="item-pro">NOG: {proyecto.nog}</p>
+                    <p className="item-pro">Fecha: {proyecto.date}</p>
+                  </div>
                   {role === "admin" && (
-                  <NavDropdown
-                    id="dropdown-basic-button"
-                    title={<img src={icon} alt="Icon" />} // Usa el ícono importado
-                    className="menu-carfa"
-                    style={{
-                      position: "absolute",
-                      bottom: "10px",
-                      left: "80%",
-                      margin: "10px",
-
-                    }}
-                  >
-                    <Dropdown.Item onClick={() => handleDelete(proyecto.project_id)}>
-                      Eliminar
-                    </Dropdown.Item>
-                  </NavDropdown>
+                    <NavDropdown
+                      id="dropdown-basic-button"
+                      title={<img src={icon} alt="Icon" />} // Usa el ícono importado
+                      className="menu-carfa"
+                      style={{
+                        width:"20px",
+                        position: "absolute",
+                        bottom: "0px",
+                        left: "80%",
+                        margin: "10px",
+                      }}
+                    >
+                      <Dropdown.Item
+                        onClick={() => handleDelete(proyecto.project_id)}
+                      >
+                        Eliminar
+                      </Dropdown.Item>
+                    </NavDropdown>
                   )}
+                  
                   <button
                     type="button"
                     className="btn btn-primary"
@@ -224,7 +236,7 @@ const PageProyectos = (props) => {
           </div>
         </div>
       </div>
-     
+
       <Modal show={showModal} onHide={handleCloseModal} centered>
         <Modal.Header closeButton>
           <Modal.Title className="VentanaEmer1">Nuevo Proyecto</Modal.Title>
@@ -286,4 +298,3 @@ const PageProyectos = (props) => {
 };
 
 export default PageProyectos;
-

@@ -234,7 +234,7 @@ const AdminPage = (props) => {
                     style={{
                       position: "absolute",
                       bottom: "-2px",
-                      left: "330px",
+                      left: "80%",
                       margin: "10px",
 
                     }}

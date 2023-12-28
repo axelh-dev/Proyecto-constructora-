@@ -13,18 +13,29 @@ const Login = ({ setLoggedIn }) => {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const [currentImageIndex, setCurrentImageIndex] = useState(0); // Nuevo estado para la imagen actual
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [backgroundOpacity, setBackgroundOpacity] = useState(1); // Nuevo estado para la opacidad
   const navigate = useNavigate();
+
 
   const images = [img1, img2, img3, img4, img5];
 
   useEffect(() => {
     const intervalId = setInterval(() => {
-      setCurrentImageIndex((prevIndex) => (prevIndex + 1) % images.length);
+      // Cambiar la opacidad a 0 al comenzar el cambio de imagen
+      setBackgroundOpacity(0);
+
+      // Después de un breve retraso, restablecer la opacidad a 1
+      setTimeout(() => {
+        setBackgroundOpacity(1);
+        setCurrentImageIndex((prevIndex) => (prevIndex + 1) % images.length);
+      }, 100);
+
     }, 4000);
 
-    return () => clearInterval(intervalId); // Limpiar el temporizador al desmontar el componente
+    return () => clearInterval(intervalId);
   }, [images.length]);
+
 
   const handleLogin = async () => {
     try {
@@ -83,13 +94,14 @@ const Login = ({ setLoggedIn }) => {
     backgroundSize: "cover",
     backgroundPosition: "center",
     backgroundRepeat: "no-repeat",
-    height: "100vh", 
+    height: "100vh",
+    transition: "opacity 1s ease-in-out",
+    opacity: 1, 
   };
-
   return (
     <div className="body" style={backgroundStyle}>
       <div className="login-container">
-        <h2>Login</h2>
+        <h2>Inicio de Sesión</h2>
         {error && <p className="error-message">{error}</p>}
         <form onSubmit={handleSubmit}>
           <label>Usuario</label>
