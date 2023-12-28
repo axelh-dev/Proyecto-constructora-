@@ -107,14 +107,14 @@ const PageFYV = (props) => {
           <Navbar.Collapse className="justify-content-end">
             <Nav className="me-auto">
             <NavDropdown title="Información" id="basic-nav-dropdown">
-                <NavDropdown.Item>
-                  <span className="fw-bold">NOG:</span> {nog}
+                <NavDropdown.Item>NOG:{"  "}
+                  <span className="fw-bold">{nog}</span> 
                 </NavDropdown.Item>
-                <NavDropdown.Item>
-                  <span className="fw-bold">Municipio:</span> {municipio}
+                <NavDropdown.Item>Municipio:{"  "}
+                  <span className="fw-bold text-capitalize">{municipio}</span> 
                 </NavDropdown.Item>
-                <NavDropdown.Item>
-                  <span className="fw-bold">Usuario:</span> {usuario}
+                <NavDropdown.Item>Usuario: {"  "}
+                  <span className="fw-bold text-capitalize">{usuario}</span> 
                 </NavDropdown.Item>
               </NavDropdown>
               <NavDropdown
