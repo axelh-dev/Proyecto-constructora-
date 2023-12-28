@@ -5,11 +5,13 @@ import Button from 'react-bootstrap/Button';
 import Dropdown from "react-bootstrap/Dropdown";
 import NavDropdown from "react-bootstrap/NavDropdown";
 import icon from "../assets/icon.svg";
+import DialogModal from "./msgExito";
 
 const ComponenteA = ({ proyectoID, updateCounter1, role }) => {
   const [proyectos, setProyectos] = useState([]);
+  const [showDialog, setShowDialog] = useState(false);
+  const [selectedVideoId, setSelectedVideoId] = useState(null);
   const videoRefs = useRef({}); // Referencias a los elementos de video
-
 
   const fetchProyectos = async () => {
     try {
@@ -31,17 +33,22 @@ const ComponenteA = ({ proyectoID, updateCounter1, role }) => {
   const handleDelete = async (id) => {
     try {
       await axios.delete(`http://localhost:8000/api/v1/videos/${id}/`);
-      console.log(`Video con ID ${id} eliminado exitosamente.`);
+      setSelectedVideoId(id); // Almacena la ID del video eliminado
+      setShowDialog(true);
       setProyectos((prevProyectos) => prevProyectos.filter((proyecto) => proyecto.id !== id));
     } catch (error) {
       console.error(`Error al eliminar el video con ID ${id}`, error);
     }
-    closeModal(); // Cierra el modal después de eliminar
   };
 
   useEffect(() => {
     fetchProyectos();
   }, [proyectoID, updateCounter1]);
+
+  const closeModal = () => {
+    setShowDialog(false);
+    setSelectedVideoId(null); // Restablece la ID del video seleccionado
+  };
 
   return (
     <div className="proyectos-container container-fluid">
@@ -79,6 +86,9 @@ const ComponenteA = ({ proyectoID, updateCounter1, role }) => {
             )}
           </div>
         ))
+      )}
+      {selectedVideoId && (
+        <DialogModal show={showDialog} onClose={closeModal} />
       )}
     </div>
   );

@@ -4,7 +4,6 @@ import Login from "./components/Login";
 import AdminPage from "./pages/AdminPage";
 import PageFYV from "./pages/PageFYV";
 import PageProyectos from "./pages/PageProyectos";
-import prb from "./pages/prb";
 // Componente de protección para verificar la autenticación
 
 
@@ -45,7 +44,6 @@ const App = () => {
           }
         />
         <Route path="/" element={<Login setLoggedIn={setLoggedIn} />} />
-        <Route path="/prueba" element={<Login setLoggedIn={prb} />} />
       </Routes>
     </BrowserRouter>
   );
