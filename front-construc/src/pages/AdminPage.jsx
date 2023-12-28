@@ -13,7 +13,8 @@ import { useNavigate } from "react-router-dom";
 import Dropdown from "react-bootstrap/Dropdown";
 import NavDropdown from "react-bootstrap/NavDropdown";
 import icon from "../assets/icon.svg";
-
+import DialogModal from "../components/msgExito"; // Importa el componente DialogModal
+import SuccessMessage from "../components/alert";
 const AdminPage = (props) => {
   const navigate = useNavigate();
   const location = useLocation();
@@ -27,6 +28,9 @@ const AdminPage = (props) => {
   const [selectedMunicipioId, setSelectedMunicipioId] = useState("");
   const [archivoProyecto, setArchivoProyecto] = useState(null);
   const [errorArchivo, setErrorArchivo] = useState("");
+  const [showDialog, setShowDialog] = useState(false);
+  const [showSuccessMessage, setShowSuccessMessage] = useState(false);
+  const [successMessage, setSuccessMessage] = useState("");
   const role_id_fija = 2;
 
   useEffect(() => {
@@ -61,6 +65,14 @@ const AdminPage = (props) => {
     return imageExtensions.includes(extension);
   };
 
+  const showAndHideSuccessMessage = () => {
+    setShowSuccessMessage(true);
+
+    setTimeout(() => {
+      setShowSuccessMessage(false);
+    }, 10000); // Cerrar después de 10 segundos
+  };
+
   const handleGuardarMuni = async () => {
     try {
       setErrorArchivo("");
@@ -87,6 +99,8 @@ const AdminPage = (props) => {
   
       if (response.status === 201) {
         console.log("Municipalidad creada exitosamente");
+        setSuccessMessage("Se ha creado el municipio exitosamente.");
+        setShowSuccessMessage(true);
         setArchivoProyecto(null);
         setErrorArchivo("");
         setMunicipalidades((prevMunicipalidades) => [
@@ -106,10 +120,9 @@ const AdminPage = (props) => {
     } finally {
       setNombreMuni("");
       handleCloseModal();
-      
     }
   };
-  
+
 
   const handleGuardarUser = async () => {
     try {
@@ -124,9 +137,9 @@ const AdminPage = (props) => {
         );
         return;
       }
-
+  
       const endPoint = "http://127.0.0.1:8000/api/register/";
-
+  
       const postData = {
         username: nombreUsuario,
         password: contrasenaUsuario,
@@ -135,9 +148,11 @@ const AdminPage = (props) => {
       };
       console.log(postData);
       const response = await axios.post(endPoint, postData);
-
+  
       if (response.status === 201) {
         console.log("Usuario creado exitosamente");
+        setSuccessMessage("Se ha creado el usuario exitosamente.");
+        setShowSuccessMessage(true);
       } else {
         console.error(
           "Error al crear el usuario. Estado de la respuesta:",
@@ -152,7 +167,6 @@ const AdminPage = (props) => {
       setSelectedMunicipio("");
     }
   };
-
   const handleCerrarSesion = async () => {
     try {
       const endpoint = "http://127.0.0.1:8000/api/logout/";
@@ -167,8 +181,6 @@ const AdminPage = (props) => {
   };
 
   const handleDelete = async (municipioId) => {
-    // Implementa la lógica para eliminar el municipio según el municipioId
-    // Esta función es llamada cuando se selecciona la opción "Eliminar"
     try {
       const response = await axios.delete(
         `http://127.0.0.1:8000/api/v1/municipalidades/${municipioId}/`
@@ -176,7 +188,8 @@ const AdminPage = (props) => {
 
       if (response.status === 204) {
         console.log("Municipio eliminado exitosamente");
-        // Actualiza el estado para reflejar el cambio
+        setSelectedMunicipioId(municipioId);
+        setShowDialog(true);
         setMunicipalidades((prevMunicipalidades) =>
           prevMunicipalidades.filter((muni) => muni.munici_id !== municipioId)
         );
@@ -228,7 +241,9 @@ const AdminPage = (props) => {
           </Navbar.Collapse>
         </Container>
       </Navbar>
-
+      {selectedMunicipioId && (
+        <DialogModal show={showDialog} onClose={() => setShowDialog(false)} />
+      )}
       {role === "admin" && (
         <div className="content-pro">
           <div className="Titulo">
@@ -287,7 +302,9 @@ const AdminPage = (props) => {
           </div>
         </div>
       )}
-
+      {showSuccessMessage && (
+        <SuccessMessage message={successMessage} onClose={() => setShowSuccessMessage(false)} />
+      )}
       <div className="Datosesquina">
         <p style={{ margin: 0 }}>CONSTRUCTORA LA UNION</p>
         <p style={{ margin: "0 auto", textAlign: "center" }}>

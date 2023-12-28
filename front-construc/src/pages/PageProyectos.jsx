@@ -15,6 +15,8 @@ import Dropdown from "react-bootstrap/Dropdown";
 import NavDropdown from "react-bootstrap/NavDropdown";
 import icon from "../assets/icon.svg";
 import DialogModal from "../components/msgExito"; // Importa el componente DialogModal
+import SuccessMessage from "../components/alert"; // Ruta relativa al componente SuccessMessage
+import "../Estilos/alert.scss";
 
 const PageProyectos = (props) => {
   const location = useLocation();
@@ -27,6 +29,7 @@ const PageProyectos = (props) => {
   const [fechaProyecto, setFechaProyecto] = useState("");
   const [showDialog, setShowDialog] = useState(false);
   const [selectedProjectId, setSelectedProjectId] = useState(null);
+  const [showSuccessMessage, setShowSuccessMessage] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -74,6 +77,7 @@ const PageProyectos = (props) => {
 
       if (response.status === 201) {
         console.log("Proyecto creado exitosamente");
+        setShowSuccessMessage(true);
         setProyectos((prevProyectos) => {
           const newArray = Array.isArray(prevProyectos)
             ? [...prevProyectos]
@@ -163,6 +167,13 @@ const PageProyectos = (props) => {
           </Navbar.Collapse>
         </Container>
       </Navbar>
+      {showSuccessMessage && (
+        <SuccessMessage
+          show={showSuccessMessage}
+          onClose={() => setShowSuccessMessage(false)}
+          message="Se ha creado el proyecto exitosamente."
+        />
+      )}
       {selectedProjectId && (
         <DialogModal show={showDialog} onClose={() => setShowDialog(false)} />
       )}
