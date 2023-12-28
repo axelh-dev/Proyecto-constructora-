@@ -1,5 +1,5 @@
-import React, { useEffect, useState, useRef } from 'react';
-import axios from 'axios';
+import React, { useEffect, useState, useRef } from "react";
+import axios from "axios";
 import Dropdown from "react-bootstrap/Dropdown";
 import NavDropdown from "react-bootstrap/NavDropdown";
 import icon from "../assets/icon.svg";
@@ -33,7 +33,9 @@ const ComponenteA = ({ proyectoID, updateCounter1, role }) => {
       await axios.delete(`http://localhost:8000/api/v1/videos/${id}/`);
       setSelectedVideoId(id); // Almacena la ID del video eliminado
       setShowDialog(true);
-      setProyectos((prevProyectos) => prevProyectos.filter((proyecto) => proyecto.id !== id));
+      setProyectos((prevProyectos) =>
+        prevProyectos.filter((proyecto) => proyecto.id !== id)
+      );
     } catch (error) {
       console.error(`Error al eliminar el video con ID ${id}`, error);
     }
@@ -62,9 +64,13 @@ const ComponenteA = ({ proyectoID, updateCounter1, role }) => {
               controls
               muted // Silencio por defecto
             >
-              <source src={`http://localhost:8000/${pkP.uploadedFile}`} type="video/mp4" />
+              <source
+                src={`http://localhost:8000/${pkP.uploadedFile}`}
+                type="video/mp4"
+              />
               Tu navegador no soporta el tag de video.
             </video>
+              <span className="text-wrap">Nombre: {pkP.name}</span>
             {role === "admin" && (
               <NavDropdown
                 id="dropdown-basic-button"
