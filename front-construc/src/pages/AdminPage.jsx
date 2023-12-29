@@ -80,6 +80,11 @@ const AdminPage = (props) => {
     try {
       setErrorArchivo("");
   
+      if (!nombreMuni) {
+        setErrorArchivo("Nombre de la municipalidad vacío");
+        return;
+      }
+  
       if (!archivoProyecto) {
         setErrorArchivo("Campo de selección vacío");
         return;
@@ -113,7 +118,7 @@ const AdminPage = (props) => {
   
         // Reinicia los campos y cierra el modal solo si la operación es exitosa
         setNombreMuni("");
-        handleCloseModal ();
+        handleCloseModal();
         // Agrega aquí la lógica para cerrar el modal
       } else {
         console.error(
@@ -128,6 +133,7 @@ const AdminPage = (props) => {
       // Agrega aquí la lógica para cerrar el modal en caso de error
     }
   };
+  
   
 
 
