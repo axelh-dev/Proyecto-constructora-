@@ -234,7 +234,7 @@ const AdminPage = (props) => {
     <>
       <Navbar expand="md" bg="light" data-bs-theme="light">
         <Container>
-          <Navbar.Brand href="/user">
+          <Navbar.Brand href="/municipalidad">
             <img
               src={logo} // Usar la imagen de la municipalidad si está disponible, de lo contrario, usa el logo predeterminado
               width="100"

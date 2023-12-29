@@ -146,7 +146,7 @@ const PageProyectos = (props) => {
     <>
       <Navbar expand="md" bg="light" data-bs-theme="light">
         <Container>
-          <Navbar.Brand href="/user">
+          <Navbar.Brand href="/municipalidad/proyectos">
             <img
               src={logo}
               width="100"
