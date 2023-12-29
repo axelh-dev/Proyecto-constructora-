@@ -77,26 +77,37 @@ const ComponenteB = ({ proyectoID, updateCounter, role }) => {
                 src={`http://localhost:8000/${pkP.uploadedFile}`}
                 alt={pkP.name}
                 onClick={() => openModal(pkP.uploadedFile)}
-                className="mb-2"
+                className="mb-1"
               />
-              <span className="text-wrap">{pkP.name}</span>
+            {/* <span className="text-wrap">{pkP.name}</span> */}
 
               {role === "admin" && (
-                <NavDropdown
-                  id="dropdown-basic-button"
-                  title={<img src={icon} alt="Icon" />}
-                  className="menu-carfa"
-                  style={{
-                    position: "absolute",
-                    bottom: "10px",
-                    left: "80%",
-                    margin: "10px",
-                  }}
-                >
-                  <Dropdown.Item onClick={() => handleDelete(pkP.id)}>
-                    Eliminar
-                  </Dropdown.Item>
-                </NavDropdown>
+               <Dropdown
+               style={{
+                position: "absolute",
+                left: "70%",
+                bottom:"2px",
+                margin: "10px",
+                width: "20px",
+              }}
+             >
+               <Dropdown.Toggle
+                 className="dropdown-toggle"
+                 variant="light"
+                 id="dropdown-basic"
+               >
+                 <img
+                   src={icon}
+                   alt="Icon"
+                   style={{ width: "25px", height: "25px" }}
+                 />
+               </Dropdown.Toggle>
+               <Dropdown.Menu>
+                 <Dropdown.Item onClick={() => handleDelete(pkP.id)}>
+                   Eliminar
+                 </Dropdown.Item>
+               </Dropdown.Menu>
+             </Dropdown>
               )}
             </div>
           ))

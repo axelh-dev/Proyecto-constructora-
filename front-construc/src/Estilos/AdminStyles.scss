@@ -40,7 +40,7 @@ $color-link-hover: black;
   text-align: center;
 }
 
-.Titulo p {
+.Titulo .tt-page {
   padding: 10px;
   font-size: 1rem;
   font-weight: bold;
@@ -63,9 +63,9 @@ $color-link-hover: black;
   background-color: #fff;
 }
 
-.municipalidad-card img {
+.municipalidad-card .img {
   width: 100%;
-  max-height: 150px;
+  max-height: 200px;
   object-fit: cover;
   border-radius: 8px;
   margin-bottom: 10px;
@@ -79,7 +79,7 @@ $color-link-hover: black;
 
 @media only screen and (max-width: 1200px) {
  .municipalidad-card {
-    flex-basis: calc(40% - 20px); /* Dos columnas en pantallas medianas */
+    flex-basis: calc(48% - 20px); /* Dos columnas en pantallas medianas */
   }
 }
 

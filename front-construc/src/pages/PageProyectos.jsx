@@ -12,7 +12,6 @@ import carpeta from "../assets/carpeta.png";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import Dropdown from "react-bootstrap/Dropdown";
-import NavDropdown from "react-bootstrap/NavDropdown";
 import icon from "../assets/icon.svg";
 import DialogModal from "../components/msgExito"; // Importa el componente DialogModal
 import SuccessMessage from "../components/alert"; // Ruta relativa al componente SuccessMessage
@@ -73,17 +72,17 @@ const PageProyectos = (props) => {
         setErrorArchivo("Nombre Proyecto Vacío");
         return;
       }
-  
+
       if (!nogProyecto) {
         setErrorArchivo("Nog Vacío");
         return;
       }
-  
+
       if (!fechaProyecto) {
         setErrorArchivo("No ha ingresado fecha");
         return;
       }
-  
+
       const endpoint = "http://127.0.0.1:8000/api/v1/projects/";
       const response = await axios.post(endpoint, {
         name: nombreProyecto,
@@ -91,16 +90,18 @@ const PageProyectos = (props) => {
         date: fechaProyecto,
         munici_id: Muni_id,
       });
-  
+
       if (response.status === 201) {
         console.log("Proyecto creado exitosamente");
         setShowSuccessMessage(true);
         setProyectos((prevProyectos) => {
-          const newArray = Array.isArray(prevProyectos) ? [...prevProyectos] : [];
+          const newArray = Array.isArray(prevProyectos)
+            ? [...prevProyectos]
+            : [];
           newArray.push(response.data);
           return newArray;
         });
-  
+
         // Limpiar mensajes de error y campos
         setErrorArchivo("");
         setNombreProyecto("");
@@ -117,7 +118,6 @@ const PageProyectos = (props) => {
       console.error("Error en la solicitud POST:", error.message);
     }
   };
-  
 
   const handleDelete = async (proyectoId) => {
     try {
@@ -219,24 +219,35 @@ const PageProyectos = (props) => {
                     <p className="item-pro">Fecha: {proyecto.date}</p>
                   </div>
                   {role === "admin" && (
-                    <NavDropdown
-                      id="dropdown-basic-button"
-                      title={<img src={icon} alt="Icon" />} // Usa el ícono importado
-                      className="menu-carfa"
-                      style={{
-                        width: "20px",
-                        position: "absolute",
-                        bottom: "0px",
-                        left: "80%",
-                        margin: "10px",
-                      }}
+                    <Dropdown
+                    style={{
+                      position: "absolute",
+                      left: "72%",
+                      bottom: "2%",
+                      margin: "10px",
+                      width: "20px",
+                    }}
                     >
-                      <Dropdown.Item
-                        onClick={() => handleDelete(proyecto.project_id)}
+                      <Dropdown.Toggle
+                        className="btn-sm dropdown-toggle"
+                        variant="light"
+                        id="dropdown-basic"
                       >
-                        Eliminar
-                      </Dropdown.Item>
-                    </NavDropdown>
+                        <img
+                          src={icon}
+                          alt="Icon"
+                          style={{ width: "25px", height: "25px" }}
+                        />
+                      </Dropdown.Toggle>
+
+                      <Dropdown.Menu>
+                        <Dropdown.Item
+                          onClick={() => handleDelete(proyecto.project_id)}
+                        >
+                          Eliminar
+                        </Dropdown.Item>
+                      </Dropdown.Menu>
+                    </Dropdown>
                   )}
 
                   <button
@@ -311,9 +322,7 @@ const PageProyectos = (props) => {
                 onChange={(e) => setFechaProyecto(e.target.value)}
               />
             </div>
-            {errorArchivo && (
-              <p className="error-message">{errorArchivo}</p>
-            )}
+            {errorArchivo && <p className="error-message">{errorArchivo}</p>}
           </div>
         </Modal.Body>
         <Modal.Footer>

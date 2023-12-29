@@ -9,21 +9,33 @@
   height: 350px;
   margin: 10px;
   border: 1px solid #ccc;
-  padding: 10px;
+  padding: 5px;
+  display: flex;
+  /* Añadir display flex */
+  align-items: center;
+  /* Centrar verticalmente */
+  position: relative;
+  /* Añadir posición relativa para posicionar el menú */
 }
 
 .card img,
 .card video {
   width: 100%;
-  height: 85%;
-  object-fit: cover; /* La imagen se ajusta manteniendo las proporciones y recortando si es necesario */
+  height: 100%;
+  object-fit: cover;
+  border-radius: 5px;
+  /* La imagen se ajusta manteniendo las proporciones y recortando si es necesario */
 }
 
-.dropdown-basic-button{
+.dropdown-basic-button {
   background: white;
 }
 
-.text-wrap{
-  width: 260px;
-  text-align: left;
+
+@media only screen and (min-width: 515px) {
+  .dropdown {
+    left: "70%";
+    bottom: "2px";
+    margin: "10px";
+  }
 }

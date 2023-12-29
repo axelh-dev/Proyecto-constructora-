@@ -1,7 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
 import axios from "axios";
 import Dropdown from "react-bootstrap/Dropdown";
-import NavDropdown from "react-bootstrap/NavDropdown";
 import icon from "../assets/icon.svg";
 import DialogModal from "./msgExito";
 
@@ -56,7 +55,7 @@ const ComponenteA = ({ proyectoID, updateCounter1, role }) => {
         <p>No hay videos disponibles</p>
       ) : (
         proyectos.map((pkP) => (
-          <div key={pkP.id} className="card">
+          <div key={pkP.id} className="card ">
             <video
               width="100%"
               height="auto"
@@ -70,23 +69,35 @@ const ComponenteA = ({ proyectoID, updateCounter1, role }) => {
               />
               Tu navegador no soporta el tag de video.
             </video>
-              <span className="text-wrap">{pkP.name}</span>
+            {/* <span className="text-wrap">{pkP.name}</span> */}
             {role === "admin" && (
-              <NavDropdown
-                id="dropdown-basic-button"
-                title={<img src={icon} alt="Icon" />} // Usa el ícono importado
-                className="menu-carfa"
+              <Dropdown
                 style={{
                   position: "absolute",
-                  bottom: "10px",
-                  left: "80%",
+                  top:"1%",
+                  left: "62%",
                   margin: "10px",
+                  width: "20px",
+                  backgroundColor: ""
                 }}
               >
-                <Dropdown.Item onClick={() => handleDelete(pkP.id)}>
-                  Eliminar
-                </Dropdown.Item>
-              </NavDropdown>
+                <Dropdown.Toggle
+                  className="dropdown-toggle"
+                  variant="light"
+                  id="dropdown-basic"
+                >
+                  <img
+                    src={icon}
+                    alt="Icon"
+                    style={{ width: "25px", height: "25px" }}
+                  />
+                </Dropdown.Toggle>
+                <Dropdown.Menu>
+                  <Dropdown.Item onClick={() => handleDelete(pkP.id)}>
+                    Eliminar
+                  </Dropdown.Item>
+                </Dropdown.Menu>
+              </Dropdown>
             )}
           </div>
         ))

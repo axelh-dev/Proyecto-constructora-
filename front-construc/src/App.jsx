@@ -13,29 +13,30 @@ const App = () => {
   useEffect(() => {
     localStorage.setItem("isLoggedIn", isLoggedIn);
   }, [isLoggedIn]);
-
-  const ProtectedRoute = ({ element, isLoggedIn, ...props }) => {
-    if (!isLoggedIn && props.location.pathname !== "/") {
+  
+  const ProtectedRoute = ({ element: Element, isLoggedIn, ...props }) => {
+    if (!isLoggedIn && (!props.location || props.location.pathname !== "/")) {
       return <Navigate to="/" replace />;
     }
-
-    return React.cloneElement(element, { ...props });
+  
+    return <Element isLoggedIn={isLoggedIn} {...props} />;
   };
+  
 
   return (
     <BrowserRouter>
       <Routes>
         <Route
           path="/municipalidad"
-          element={<ProtectedRoute element={<AdminPage />} isLoggedIn={isLoggedIn} />}
+          element={<ProtectedRoute element={AdminPage} isLoggedIn={isLoggedIn} />}
         />
         <Route
           path="/municipalidad/proyectos"
-          element={<ProtectedRoute element={<PageProyectos />} isLoggedIn={isLoggedIn} />}
+          element={<ProtectedRoute element={PageProyectos} isLoggedIn={isLoggedIn} />}
         />
         <Route
           path="/municipalidad/proyectos/content"
-          element={<ProtectedRoute element={<PageFYV />} isLoggedIn={isLoggedIn} />}
+          element={<ProtectedRoute element={PageFYV} isLoggedIn={isLoggedIn} />}
         />
         <Route path="/" element={<Login setLoggedIn={setLoggedIn} />} />
       </Routes>
@@ -44,4 +45,3 @@ const App = () => {
 };
 
 export default App;
-	

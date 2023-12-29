@@ -11,7 +11,6 @@ import "../Estilos/AdminStyles.scss";
 import logo from "../assets/logo.svg";
 import { useNavigate } from "react-router-dom";
 import Dropdown from "react-bootstrap/Dropdown";
-import NavDropdown from "react-bootstrap/NavDropdown";
 import icon from "../assets/icon.svg";
 import DialogModal from "../components/msgExito"; // Importa el componente DialogModal
 import SuccessMessage from "../components/alert";
@@ -48,7 +47,7 @@ const AdminPage = (props) => {
         console.error("Error al obtener las municipalidades", error);
       }
     };
-  
+
     fetchMunicipalidades();
   }, [role, usuario, municipio, navigate]);
 
@@ -274,8 +273,9 @@ const AdminPage = (props) => {
       {role === "admin" && (
         <div className="content-pro">
           <div className="Titulo">
-            <p>LISTA DE MUNICIPIOS</p>
-
+            <p className="tt-page" style={{ marginBottom: "10px" }}>
+              LISTA DE MUNICIPIOS
+            </p>
             <div className="municipalidades-container">
               {municipalidades.map(
                 (muni) =>
@@ -287,6 +287,7 @@ const AdminPage = (props) => {
                       style={{ position: "relative" }}
                     >
                       <img
+                        className="img"
                         src={
                           muni.uploadedFile ===
                           "http://localhost:8000/media/NULL"
@@ -295,24 +296,35 @@ const AdminPage = (props) => {
                         }
                         alt="img_muni"
                       />
-                      <p>{muni.name}</p>
-                      <NavDropdown
-                        id="dropdown-basic-button"
-                        title={<img src={icon} alt="Icon" />} // Usa el ícono importado
-                        className="menu-carfa"
+                      <p style={{ margin: "0px" }}>{muni.name}</p>
+                      <Dropdown
                         style={{
                           position: "absolute",
-                          bottom: "-20px",
-                          left: "78%",
+                          left: "73%",
+                          bottom: "3%",
                           margin: "10px",
+                          width: "20px",
                         }}
                       >
-                        <Dropdown.Item
-                          onClick={() => handleDelete(muni.munici_id)}
+                        <Dropdown.Toggle
+                          className="btn-sm dropdown-toggle"
+                          variant="light"
+                          id="dropdown-basic"
                         >
-                          Eliminar
-                        </Dropdown.Item>
-                      </NavDropdown>
+                          <img
+                            src={icon}
+                            alt="Icon"
+                            style={{ width: "25px", height: "25px" }}
+                          />
+                        </Dropdown.Toggle>
+                        <Dropdown.Menu>
+                          <Dropdown.Item
+                            onClick={() => handleDelete(muni.munici_id)}
+                          >
+                            Eliminar
+                          </Dropdown.Item>
+                        </Dropdown.Menu>
+                      </Dropdown>
                       <button
                         type="button"
                         className="btn btn-primary"
@@ -327,7 +339,7 @@ const AdminPage = (props) => {
                           })
                         }
                       >
-                        Ir a la Municipalidad
+                        Ver Proyectos
                       </button>
                     </div>
                   )
@@ -342,130 +354,121 @@ const AdminPage = (props) => {
           onClose={() => setShowSuccessMessage(false)}
         />
       )}
-      <div className="Datosesquina">
-        <p style={{ margin: 0 }}>CONSTRUCTORA LA UNION</p>
-        <p style={{ margin: "0 auto", textAlign: "center" }}>
-          KM. 72.5, RUTA AL ATLANTICO ALDEA CASAS VIEJAS GUASTATOYA,
-        </p>
-        <p style={{ margin: 0 }}>EL PROGRESO TEL. 3091-9731</p>
 
-        <Modal show={showModal} onHide={handleCloseModal} centered>
-          <Modal.Header closeButton>
-            <Modal.Title className="Ventana">Datos</Modal.Title>
-          </Modal.Header>
-          <Modal.Body>
-            <div className="VentanaEmer">
-              <h5>Crear Municipalidad</h5>
+      <Modal show={showModal} onHide={handleCloseModal} centered>
+        <Modal.Header closeButton>
+          <Modal.Title className="Ventana">Datos</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <div className="VentanaEmer">
+            <h5>Crear Municipalidad</h5>
+            <div className="mb-3">
+              <label htmlFor="nombreMuni" className="form-label">
+                Nombre Muni:
+              </label>
+              <input
+                type="text"
+                className="form-control"
+                id="nombreMuni"
+                placeholder="Nombre de la municipalidad"
+                value={nombreMuni}
+                onChange={(e) => setNombreMuni(e.target.value)}
+              />
               <div className="mb-3">
-                <label htmlFor="nombreMuni" className="form-label">
-                  Nombre Muni:
+                <label htmlFor="archivoProyecto" className="form-label">
+                  Foto Muni:
                 </label>
                 <input
-                  type="text"
+                  type="file"
                   className="form-control"
-                  id="nombreMuni"
-                  placeholder="Nombre de la municipalidad"
-                  value={nombreMuni}
-                  onChange={(e) => setNombreMuni(e.target.value)}
+                  id="archivoProyecto"
+                  onChange={(e) => setArchivoProyecto(e.target.files[0])}
                 />
-                <div className="mb-3">
-                  <label htmlFor="archivoProyecto" className="form-label">
-                    Foto Muni:
-                  </label>
-                  <input
-                    type="file"
-                    className="form-control"
-                    id="archivoProyecto"
-                    onChange={(e) => setArchivoProyecto(e.target.files[0])}
-                  />
-                </div>
-                {errorArchivo && (
-                  <p className="error-message">{errorArchivo}</p>
-                )}
-                <Button
-                  variant="primary"
-                  className="GuardarButtonRight mt-2"
-                  onClick={handleGuardarMuni}
-                >
-                  Guardar
-                </Button>
               </div>
+              {errorArchivo && <p className="error-message">{errorArchivo}</p>}
+              <Button
+                variant="primary"
+                className="GuardarButtonRight mt-2"
+                onClick={handleGuardarMuni}
+              >
+                Guardar
+              </Button>
+            </div>
+          </div>
+
+          <div className="VentanaEmer">
+            <h5>Asignar a Usuario</h5>
+            <div className="mb-3">
+              <label htmlFor="nombreUsuario" className="form-label">
+                Nombre:
+              </label>
+              <input
+                type="text"
+                className="form-control"
+                id="nombreUsuario"
+                placeholder="Ingrese el nombre del usuario"
+                value={nombreUsuario}
+                onChange={(e) => setNombreUsuario(e.target.value)}
+              />
+            </div>
+            <div className="mb-3">
+              <label htmlFor="contrasenaUsuario" className="form-label">
+                Contraseña:
+              </label>
+              <input
+                type="password"
+                className="form-control"
+                id="contrasenaUsuario"
+                placeholder="Ingrese la contraseña del usuario"
+                value={contrasenaUsuario}
+                onChange={(e) => setContrasenaUsuario(e.target.value)}
+              />
             </div>
 
-            <div className="VentanaEmer">
-              <h5>Asignar a Usuario</h5>
-              <div className="mb-3">
-                <label htmlFor="nombreUsuario" className="form-label">
-                  Nombre:
-                </label>
-                <input
-                  type="text"
-                  className="form-control"
-                  id="nombreUsuario"
-                  placeholder="Ingrese el nombre del usuario"
-                  value={nombreUsuario}
-                  onChange={(e) => setNombreUsuario(e.target.value)}
-                />
-              </div>
-              <div className="mb-3">
-                <label htmlFor="contrasenaUsuario" className="form-label">
-                  Contraseña:
-                </label>
-                <input
-                  type="password"
-                  className="form-control"
-                  id="contrasenaUsuario"
-                  placeholder="Ingrese la contraseña del usuario"
-                  value={contrasenaUsuario}
-                  onChange={(e) => setContrasenaUsuario(e.target.value)}
-                />
-              </div>
-
-              <div className="mb-3">
-                <label htmlFor="selectMunicipalidad" className="form-label">
-                  Seleccionar Municipalidad:
-                </label>
-                <select
-                  className="form-select"
-                  id="selectMunicipalidad"
-                  value={selectedMunicipio}
-                  onChange={(e) => {
-                    const selectedMuniId = municipalidades.find(
-                      (muni) => muni.name === e.target.value
-                    )?.munici_id;
-                    setSelectedMunicipioId(selectedMuniId || "");
-                    setSelectedMunicipio(e.target.value);
-                  }}
-                >
-                  <option value="" disabled>
-                    Seleccionar una municipalidad
+            <div className="mb-3">
+              <label htmlFor="selectMunicipalidad" className="form-label">
+                Seleccionar Municipalidad:
+              </label>
+              <select
+                className="form-select"
+                id="selectMunicipalidad"
+                value={selectedMunicipio}
+                onChange={(e) => {
+                  const selectedMuniId = municipalidades.find(
+                    (muni) => muni.name === e.target.value
+                  )?.munici_id;
+                  setSelectedMunicipioId(selectedMuniId || "");
+                  setSelectedMunicipio(e.target.value);
+                }}
+              >
+                <option value="" disabled>
+                  Seleccionar una municipalidad
+                </option>
+                {municipalidades.map((muni) => (
+                  <option key={muni.munici_id} value={muni.name}>
+                    {muni.name}
                   </option>
-                  {municipalidades.map((muni) => (
-                    <option key={muni.munici_id} value={muni.name}>
-                      {muni.name}
-                    </option>
-                  ))}
-                </select>
-                {errorArchivouser && (
-                  <p className="error-message">{errorArchivouser}</p>
-                )}
-                <Button
-                  variant="primary"
-                  className="GuardarButtonRight mt-2"
-                  onClick={handleGuardarUser}
-                >
-                  Guardar
-                </Button>
-              </div>
+                ))}
+              </select>
+              {errorArchivouser && (
+                <p className="error-message">{errorArchivouser}</p>
+              )}
+              <Button
+                variant="primary"
+                className="GuardarButtonRight mt-2"
+                onClick={handleGuardarUser}
+              >
+                Guardar
+              </Button>
             </div>
-          </Modal.Body>
-          <Modal.Footer className="CerrarButton">
-            <Button variant="secondary" onClick={handleCloseModal}>
-              Cerrar
-            </Button>
-          </Modal.Footer>
-        </Modal>
-      </div>
+          </div>
+        </Modal.Body>
+        <Modal.Footer className="CerrarButton">
+          <Button variant="secondary" onClick={handleCloseModal}>
+            Cerrar
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </>
   );
 };

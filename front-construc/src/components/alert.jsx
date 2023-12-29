@@ -7,7 +7,7 @@ const SuccessMessage = ({ message, onClose }) => {
   useEffect(() => {
     const timer = setTimeout(() => {
       onClose();
-    }, 7000); // Cerrar después de 10 segundos
+    }, 2000); 
 
     return () => clearTimeout(timer);
   }, [onClose]);
