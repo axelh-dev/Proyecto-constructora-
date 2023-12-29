@@ -36,6 +36,9 @@ const AdminPage = (props) => {
   const role_id_fija = 2;
 
   useEffect(() => {
+    if (!role || !usuario || !municipio) {
+      navigate("/"); // Redirect to login page
+    }
     const fetchMunicipalidades = async () => {
       try {
         const endPoint = "http://localhost:8000/api/v1/municipalidades/";
@@ -45,9 +48,9 @@ const AdminPage = (props) => {
         console.error("Error al obtener las municipalidades", error);
       }
     };
-
+  
     fetchMunicipalidades();
-  }, []);
+  }, [role, usuario, municipio, navigate]);
 
   const handleOpenModal = () => {
     setShowModal(true);
@@ -197,6 +200,7 @@ const AdminPage = (props) => {
 
       // Redirige a la página de inicio de sesión u otra página después de cerrar sesión
       // Puedes ajustar la ruta según tus necesidades
+      localStorage.clear();
       navigate("/");
     } catch (error) {
       console.error("Error al cerrar sesión:", error.message);
@@ -230,7 +234,7 @@ const AdminPage = (props) => {
     <>
       <Navbar expand="md" bg="light" data-bs-theme="light">
         <Container>
-          <Navbar.Brand href="/user">
+          <Navbar.Brand href="/municipalidad">
             <img
               src={logo} // Usar la imagen de la municipalidad si está disponible, de lo contrario, usa el logo predeterminado
               width="100"

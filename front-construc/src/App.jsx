@@ -1,22 +1,25 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Login from "./components/Login";
 import AdminPage from "./pages/AdminPage";
 import PageFYV from "./pages/PageFYV";
 import PageProyectos from "./pages/PageProyectos";
-// Componente de protección para verificar la autenticación
-
 
 const App = () => {
+  const [isLoggedIn, setLoggedIn] = useState(
+    localStorage.getItem("isLoggedIn") === "true"
+  );
 
-  const [isLoggedIn, setLoggedIn] = useState(false);
+  useEffect(() => {
+    localStorage.setItem("isLoggedIn", isLoggedIn);
+  }, [isLoggedIn]);
 
   const ProtectedRoute = ({ element, isLoggedIn, ...props }) => {
-    if (!isLoggedIn) {
+    if (!isLoggedIn && props.location.pathname !== "/") {
       return <Navigate to="/" replace />;
     }
-  
-    return React.cloneElement(element, props);
+
+    return React.cloneElement(element, { ...props });
   };
 
   return (
@@ -24,24 +27,15 @@ const App = () => {
       <Routes>
         <Route
           path="/municipalidad"
-          element={
-            <ProtectedRoute element={<AdminPage />} isLoggedIn={isLoggedIn} />
-          }
+          element={<ProtectedRoute element={<AdminPage />} isLoggedIn={isLoggedIn} />}
         />
         <Route
           path="/municipalidad/proyectos"
-          element={
-            <ProtectedRoute
-              element={<PageProyectos />}
-              isLoggedIn={isLoggedIn}
-            />
-          }
+          element={<ProtectedRoute element={<PageProyectos />} isLoggedIn={isLoggedIn} />}
         />
         <Route
           path="/municipalidad/proyectos/content"
-          element={
-            <ProtectedRoute element={<PageFYV />} isLoggedIn={isLoggedIn} />
-          }
+          element={<ProtectedRoute element={<PageFYV />} isLoggedIn={isLoggedIn} />}
         />
         <Route path="/" element={<Login setLoggedIn={setLoggedIn} />} />
       </Routes>
@@ -50,3 +44,4 @@ const App = () => {
 };
 
 export default App;
+	
