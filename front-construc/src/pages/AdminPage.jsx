@@ -28,6 +28,7 @@ const AdminPage = (props) => {
   const [selectedMunicipioId, setSelectedMunicipioId] = useState("");
   const [archivoProyecto, setArchivoProyecto] = useState(null);
   const [errorArchivo, setErrorArchivo] = useState("");
+  const [errorArchivouser, setErrorArchivouser] = useState("");
   const [showDialog, setShowDialog] = useState(false);
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
   const [successMessage, setSuccessMessage] = useState("");
@@ -50,12 +51,14 @@ const AdminPage = (props) => {
   const handleOpenModal = () => {
     setShowModal(true);
     setErrorArchivo("");
+    setErrorArchivouser("");
     setArchivoProyecto(null);
   };
 
   const handleCloseModal = () => {
     setShowModal(false);
     setErrorArchivo("");
+    setErrorArchivouser("");
     setArchivoProyecto(null);
   };
 
@@ -107,6 +110,11 @@ const AdminPage = (props) => {
           ...prevMunicipalidades,
           response.data,
         ]);
+  
+        // Reinicia los campos y cierra el modal solo si la operación es exitosa
+        setNombreMuni("");
+        handleCloseModal ();
+        // Agrega aquí la lógica para cerrar el modal
       } else {
         console.error(
           "Error al crear la municipalidad. Estado de la respuesta:",
@@ -117,24 +125,26 @@ const AdminPage = (props) => {
     } catch (error) {
       console.error("Error en la solicitud POST:", error.message);
       setErrorArchivo("Error en la solicitud POST");
-    } finally {
-      setNombreMuni("");
-      handleCloseModal();
+      // Agrega aquí la lógica para cerrar el modal en caso de error
     }
   };
+  
 
 
   const handleGuardarUser = async () => {
     try {
-      if (
-        !nombreUsuario.trim() ||
-        !contrasenaUsuario.trim() ||
-        !selectedMunicipioId ||
-        !role_id_fija
-      ) {
-        console.log(
-          "Los campos nombreUsuario, contrasenaUsuario, selectedMunicipioId o role_id_fija están vacíos"
-        );
+      if (!nombreUsuario.trim()) {
+        setErrorArchivouser("Nombre de Usuario Vacío");
+        return;
+      }
+  
+      if (!contrasenaUsuario.trim()) {
+        setErrorArchivouser("Contraseña Vacía");
+        return;
+      }
+  
+      if (!selectedMunicipioId || !role_id_fija) {
+        setErrorArchivouser("No ha seleccionado municipalidad");
         return;
       }
   
@@ -147,26 +157,33 @@ const AdminPage = (props) => {
         role_id: role_id_fija,
       };
       console.log(postData);
+  
       const response = await axios.post(endPoint, postData);
   
       if (response.status === 201) {
         console.log("Usuario creado exitosamente");
         setSuccessMessage("Se ha creado el usuario exitosamente.");
         setShowSuccessMessage(true);
+  
+        // Reinicia los campos solo si la operación es exitosa
+        setNombreUsuario("");
+        setContrasenaUsuario("");
+        setSelectedMunicipio("");
+        handleCloseModal ();
       } else {
         console.error(
           "Error al crear el usuario. Estado de la respuesta:",
           response.status
         );
+        setErrorArchivouser("Error al crear el usuario. Estado de la respuesta: " + response.status);
       }
     } catch (error) {
       console.error("Error en la solicitud POST:", error.message);
-    } finally {
-      setNombreUsuario("");
-      setContrasenaUsuario("");
-      setSelectedMunicipio("");
+      setErrorArchivouser("Error en la solicitud POST: " + error.message);
     }
   };
+  
+  
   const handleCerrarSesion = async () => {
     try {
       const endpoint = "http://127.0.0.1:8000/api/logout/";
@@ -409,6 +426,9 @@ const AdminPage = (props) => {
                     </option>
                   ))}
                 </select>
+                {errorArchivouser && (
+                  <p className="error-message">{errorArchivouser}</p>
+                )}
                 <Button
                   variant="primary"
                   className="GuardarButtonRight mt-2"

@@ -30,6 +30,7 @@ const PageProyectos = (props) => {
   const [showDialog, setShowDialog] = useState(false);
   const [selectedProjectId, setSelectedProjectId] = useState(null);
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
+  const [errorArchivo, setErrorArchivo] = useState("");
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -67,6 +68,22 @@ const PageProyectos = (props) => {
 
   const handleGuardarProyecto = async () => {
     try {
+      // Validar campos
+      if (!nombreProyecto) {
+        setErrorArchivo("Nombre Proyecto Vacío");
+        return;
+      }
+  
+      if (!nogProyecto) {
+        setErrorArchivo("Nog Vacío");
+        return;
+      }
+  
+      if (!fechaProyecto) {
+        setErrorArchivo("No ha ingresado fecha");
+        return;
+      }
+  
       const endpoint = "http://127.0.0.1:8000/api/v1/projects/";
       const response = await axios.post(endpoint, {
         name: nombreProyecto,
@@ -74,17 +91,22 @@ const PageProyectos = (props) => {
         date: fechaProyecto,
         munici_id: Muni_id,
       });
-
+  
       if (response.status === 201) {
         console.log("Proyecto creado exitosamente");
         setShowSuccessMessage(true);
         setProyectos((prevProyectos) => {
-          const newArray = Array.isArray(prevProyectos)
-            ? [...prevProyectos]
-            : [];
+          const newArray = Array.isArray(prevProyectos) ? [...prevProyectos] : [];
           newArray.push(response.data);
           return newArray;
         });
+  
+        // Limpiar mensajes de error y campos
+        setErrorArchivo("");
+        setNombreProyecto("");
+        setNogProyecto("");
+        setFechaProyecto("");
+        setShowModal(false);
       } else {
         console.error(
           "Error al crear el proyecto. Estado de la respuesta:",
@@ -93,13 +115,9 @@ const PageProyectos = (props) => {
       }
     } catch (error) {
       console.error("Error en la solicitud POST:", error.message);
-    } finally {
-      setNombreProyecto("");
-      setNogProyecto("");
-      setFechaProyecto("");
-      setShowModal(false);
     }
   };
+  
 
   const handleDelete = async (proyectoId) => {
     try {
@@ -206,7 +224,7 @@ const PageProyectos = (props) => {
                       title={<img src={icon} alt="Icon" />} // Usa el ícono importado
                       className="menu-carfa"
                       style={{
-                        width:"20px",
+                        width: "20px",
                         position: "absolute",
                         bottom: "0px",
                         left: "80%",
@@ -220,7 +238,7 @@ const PageProyectos = (props) => {
                       </Dropdown.Item>
                     </NavDropdown>
                   )}
-                  
+
                   <button
                     type="button"
                     className="btn btn-primary"
@@ -293,6 +311,9 @@ const PageProyectos = (props) => {
                 onChange={(e) => setFechaProyecto(e.target.value)}
               />
             </div>
+            {errorArchivo && (
+              <p className="error-message">{errorArchivo}</p>
+            )}
           </div>
         </Modal.Body>
         <Modal.Footer>
