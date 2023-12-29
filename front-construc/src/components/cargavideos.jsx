@@ -70,7 +70,7 @@ const ComponenteA = ({ proyectoID, updateCounter1, role }) => {
               />
               Tu navegador no soporta el tag de video.
             </video>
-              <span className="text-wrap">Nombre: {pkP.name}</span>
+              <span className="text-wrap">{pkP.name}</span>
             {role === "admin" && (
               <NavDropdown
                 id="dropdown-basic-button"

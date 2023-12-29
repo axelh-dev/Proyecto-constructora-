@@ -79,6 +79,8 @@ const ComponenteB = ({ proyectoID, updateCounter, role }) => {
                 onClick={() => openModal(pkP.uploadedFile)}
                 className="mb-2"
               />
+              <span className="text-wrap">{pkP.name}</span>
+
               {role === "admin" && (
                 <NavDropdown
                   id="dropdown-basic-button"

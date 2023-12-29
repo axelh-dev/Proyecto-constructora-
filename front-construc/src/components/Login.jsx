@@ -54,6 +54,7 @@ const Login = ({ setLoggedIn }) => {
             usuario: userData.user,
             municipio: userData.municipio,
             role: userData.role,
+            idMuni: userData.Muni_id,
           },
         });
       } else if (userData.role === "user") {

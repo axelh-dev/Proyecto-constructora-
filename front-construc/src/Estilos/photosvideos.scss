@@ -10,9 +10,6 @@
   margin: 10px;
   border: 1px solid #ccc;
   padding: 10px;
-  display: flex; /* Añadir display flex */
-  align-items: center; /* Centrar verticalmente */
-  position: relative; /* Añadir posición relativa para posicionar el menú */
 }
 
 .card img,
@@ -26,3 +23,7 @@
   background: white;
 }
 
+.text-wrap{
+  width: 260px;
+  text-align: left;
+}

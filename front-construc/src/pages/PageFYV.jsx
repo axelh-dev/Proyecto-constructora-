@@ -53,6 +53,7 @@
         let endpoint = "";
         let formData = new FormData();
   
+        
         if (tipoArchivo === "Fotos") {
           endpoint = "http://127.0.0.1:8000/api/v1/photos/";
         } else if (tipoArchivo === "Videos") {
@@ -96,7 +97,7 @@
         }
       } catch (error) {
         console.error(`Error en la solicitud POST:`, error.message);
-        setError("Error en la solicitud POST");
+        setError("Formato Inválido ");
       } finally {
         setTipoProyecto(tipoArchivo);
         setArchivoProyecto(null);

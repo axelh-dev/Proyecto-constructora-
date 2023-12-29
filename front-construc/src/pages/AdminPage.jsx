@@ -15,10 +15,11 @@ import NavDropdown from "react-bootstrap/NavDropdown";
 import icon from "../assets/icon.svg";
 import DialogModal from "../components/msgExito"; // Importa el componente DialogModal
 import SuccessMessage from "../components/alert";
+
 const AdminPage = (props) => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { usuario, municipio, role } = location.state || {};
+  const { usuario, municipio, role, idMuni } = location.state || {};
   const [showModal, setShowModal] = useState(false);
   const [municipalidades, setMunicipalidades] = useState([]);
   const [selectedMunicipio, setSelectedMunicipio] = useState("");
@@ -79,32 +80,32 @@ const AdminPage = (props) => {
   const handleGuardarMuni = async () => {
     try {
       setErrorArchivo("");
-  
+
       if (!nombreMuni) {
         setErrorArchivo("Nombre de la municipalidad vacío");
         return;
       }
-  
+
       if (!archivoProyecto) {
         setErrorArchivo("Campo de selección vacío");
         return;
       }
-  
+
       if (!isImageFile(archivoProyecto)) {
         setErrorArchivo("Archivo no es una imagen");
         return;
       }
-  
+
       const formData = new FormData();
       formData.append("name", nombreMuni);
-  
+
       if (archivoProyecto) {
         formData.append("uploadedFile", archivoProyecto);
       }
-  
+
       const endPoint = "http://localhost:8000/api/v1/municipalidades/";
       const response = await axios.post(endPoint, formData);
-  
+
       if (response.status === 201) {
         console.log("Municipalidad creada exitosamente");
         setSuccessMessage("Se ha creado el municipio exitosamente.");
@@ -115,7 +116,7 @@ const AdminPage = (props) => {
           ...prevMunicipalidades,
           response.data,
         ]);
-  
+
         // Reinicia los campos y cierra el modal solo si la operación es exitosa
         setNombreMuni("");
         handleCloseModal();
@@ -133,9 +134,6 @@ const AdminPage = (props) => {
       // Agrega aquí la lógica para cerrar el modal en caso de error
     }
   };
-  
-  
-
 
   const handleGuardarUser = async () => {
     try {
@@ -143,19 +141,19 @@ const AdminPage = (props) => {
         setErrorArchivouser("Nombre de Usuario Vacío");
         return;
       }
-  
+
       if (!contrasenaUsuario.trim()) {
         setErrorArchivouser("Contraseña Vacía");
         return;
       }
-  
+
       if (!selectedMunicipioId || !role_id_fija) {
         setErrorArchivouser("No ha seleccionado municipalidad");
         return;
       }
-  
+
       const endPoint = "http://127.0.0.1:8000/api/register/";
-  
+
       const postData = {
         username: nombreUsuario,
         password: contrasenaUsuario,
@@ -163,33 +161,35 @@ const AdminPage = (props) => {
         role_id: role_id_fija,
       };
       console.log(postData);
-  
+
       const response = await axios.post(endPoint, postData);
-  
+
       if (response.status === 201) {
         console.log("Usuario creado exitosamente");
         setSuccessMessage("Se ha creado el usuario exitosamente.");
         setShowSuccessMessage(true);
-  
+
         // Reinicia los campos solo si la operación es exitosa
         setNombreUsuario("");
         setContrasenaUsuario("");
         setSelectedMunicipio("");
-        handleCloseModal ();
+        handleCloseModal();
       } else {
         console.error(
           "Error al crear el usuario. Estado de la respuesta:",
           response.status
         );
-        setErrorArchivouser("Error al crear el usuario. Estado de la respuesta: " + response.status);
+        setErrorArchivouser(
+          "Error al crear el usuario. Estado de la respuesta: " +
+            response.status
+        );
       }
     } catch (error) {
       console.error("Error en la solicitud POST:", error.message);
       setErrorArchivouser("Error en la solicitud POST: " + error.message);
     }
   };
-  
-  
+
   const handleCerrarSesion = async () => {
     try {
       const endpoint = "http://127.0.0.1:8000/api/logout/";
@@ -273,60 +273,70 @@ const AdminPage = (props) => {
             <p>LISTA DE MUNICIPIOS</p>
 
             <div className="municipalidades-container">
-              {municipalidades.map((muni) => (
-                <div
-                  key={muni.munici_id}
-                  className="municipalidad-card border"
-                  style={{ position: "relative" }}
-                >
-                  <img
-                    src={
-                      muni.uploadedFile === "http://localhost:8000/media/NULL"
-                        ? logo
-                        : muni.uploadedFile
-                    }
-                    alt="img_muni"
-                  />
-                  <p>{muni.name}</p>
-                  <NavDropdown
-                    id="dropdown-basic-button"
-                    title={<img src={icon} alt="Icon" />} // Usa el ícono importado
-                    className="menu-carfa"
-                    style={{
-                      position: "absolute",
-                      bottom: "-2px",
-                      left: "80%",
-                      margin: "10px",
-                    }}
-                  >
-                    <Dropdown.Item onClick={() => handleDelete(muni.munici_id)}>
-                      Eliminar
-                    </Dropdown.Item>
-                  </NavDropdown>
-                  <button
-                    type="button"
-                    className="btn btn-primary"
-                    onClick={() =>
-                      navigate("/municipalidad/proyectos", {
-                        state: {
-                          usuario,
-                          municipio: muni.name,
-                          Muni_id: muni.munici_id,
-                          role: role,
-                        },
-                      })
-                    }
-                  >
-                    Ir a la Municipalidad
-                  </button>
-                </div>
-              ))}
+              {municipalidades.map(
+                (muni) =>
+                  // Agrega la validación aquí
+                  muni.munici_id !== idMuni && (
+                    <div
+                      key={muni.munici_id}
+                      className="municipalidad-card border"
+                      style={{ position: "relative" }}
+                    >
+                      <img
+                        src={
+                          muni.uploadedFile ===
+                          "http://localhost:8000/media/NULL"
+                            ? logo
+                            : muni.uploadedFile
+                        }
+                        alt="img_muni"
+                      />
+                      <p>{muni.name}</p>
+                      <NavDropdown
+                        id="dropdown-basic-button"
+                        title={<img src={icon} alt="Icon" />} // Usa el ícono importado
+                        className="menu-carfa"
+                        style={{
+                          position: "absolute",
+                          bottom: "-20px",
+                          left: "78%",
+                          margin: "10px",
+                        }}
+                      >
+                        <Dropdown.Item
+                          onClick={() => handleDelete(muni.munici_id)}
+                        >
+                          Eliminar
+                        </Dropdown.Item>
+                      </NavDropdown>
+                      <button
+                        type="button"
+                        className="btn btn-primary"
+                        onClick={() =>
+                          navigate("/municipalidad/proyectos", {
+                            state: {
+                              usuario,
+                              municipio: muni.name,
+                              Muni_id: muni.munici_id,
+                              role: role,
+                            },
+                          })
+                        }
+                      >
+                        Ir a la Municipalidad
+                      </button>
+                    </div>
+                  )
+              )}
             </div>
           </div>
         </div>
       )}
       {showSuccessMessage && (
-        <SuccessMessage message={successMessage} onClose={() => setShowSuccessMessage(false)} />
+        <SuccessMessage
+          message={successMessage}
+          onClose={() => setShowSuccessMessage(false)}
+        />
       )}
       <div className="Datosesquina">
         <p style={{ margin: 0 }}>CONSTRUCTORA LA UNION</p>
