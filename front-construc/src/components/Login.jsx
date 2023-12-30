@@ -14,9 +14,8 @@ const Login = ({ setLoggedIn }) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
-  const [backgroundOpacity, setBackgroundOpacity] = useState(1); // Nuevo estado para la opacidad
+  const [backgroundOpacity, setBackgroundOpacity] = useState(1);
   const navigate = useNavigate();
-
 
   const images = [img1, img2, img3, img4, img5];
 
@@ -28,16 +27,17 @@ const Login = ({ setLoggedIn }) => {
         setBackgroundOpacity(1);
         setCurrentImageIndex((prevIndex) => (prevIndex + 1) % images.length);
       }, 100);
-
     }, 4000);
 
     return () => clearInterval(intervalId);
   }, [images.length]);
 
-
   const handleLogin = async () => {
     try {
       setLoading(true);
+
+      // Actualizar el estado de autenticación aquí
+      setLoggedIn(true);
 
       const response = await axios.post("http://127.0.0.1:8000/api/login/", {
         username: username,
@@ -65,9 +65,6 @@ const Login = ({ setLoggedIn }) => {
           },
         });
       }
-
-      // Actualizar el estado de autenticación aquí
-      setLoggedIn(true);
     } catch (error) {
       console.error("Error durante el inicio de sesión", error);
 
@@ -95,8 +92,9 @@ const Login = ({ setLoggedIn }) => {
     backgroundRepeat: "no-repeat",
     height: "100vh",
     transition: "opacity 1s ease-in-out",
-    opacity: 1, 
+    opacity: backgroundOpacity,
   };
+
   return (
     <div className="body" style={backgroundStyle}>
       <div className="login-container">

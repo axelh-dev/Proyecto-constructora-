@@ -33,6 +33,7 @@ const AdminPage = (props) => {
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
   const [successMessage, setSuccessMessage] = useState("");
   const role_id_fija = 2;
+  const [mostrarContrasena, setMostrarContrasena] = useState(false);
 
   useEffect(() => {
     if (!role || !usuario || !municipio) {
@@ -196,10 +197,10 @@ const AdminPage = (props) => {
     try {
       const endpoint = "http://127.0.0.1:8000/api/logout/";
       await axios.post(endpoint);
-  
+
       // Elimina solo la clave relacionada con la sesión
       localStorage.removeItem("isLoggedIn");
-      
+
       // Puedes ajustar la ruta según tus necesidades
       navigate("/");
     } catch (error) {
@@ -408,14 +409,23 @@ const AdminPage = (props) => {
               <label htmlFor="contrasenaUsuario" className="form-label">
                 Contraseña:
               </label>
-              <input
-                type="password"
-                className="form-control"
-                id="contrasenaUsuario"
-                placeholder="Ingrese la contraseña del usuario"
-                value={contrasenaUsuario}
-                onChange={(e) => setContrasenaUsuario(e.target.value)}
-              />
+              <div className="input-group">
+                <input
+                  type={mostrarContrasena ? "text" : "password"}
+                  className="form-control"
+                  id="contrasenaUsuario"
+                  placeholder="Ingrese la contraseña del usuario"
+                  value={contrasenaUsuario}
+                  onChange={(e) => setContrasenaUsuario(e.target.value)}
+                />
+                <button
+                  className="btn btn-outline-secondary"
+                  type="button"
+                  onClick={() => setMostrarContrasena(!mostrarContrasena)}
+                >
+                  {mostrarContrasena ? "Ocultar" : "Mostrar"}
+                </button>
+              </div>
             </div>
 
             <div className="mb-3">

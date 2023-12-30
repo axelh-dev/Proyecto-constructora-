@@ -62,9 +62,12 @@ const PageProyectos = (props) => {
   
       // Elimina solo la clave relacionada con la sesión
       localStorage.removeItem("isLoggedIn");
-      
-      // Puedes ajustar la ruta según tus necesidades
-      navigate("/");
+  
+      // Espera un breve momento antes de redirigir
+      setTimeout(() => {
+        // Puedes ajustar la ruta según tus necesidades
+        navigate("/");
+      }, 100);
     } catch (error) {
       console.error("Error al cerrar sesión:", error.message);
     }

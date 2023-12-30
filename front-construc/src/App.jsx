@@ -6,33 +6,37 @@ import PageFYV from "./pages/PageFYV";
 import PageProyectos from "./pages/PageProyectos";
 
 const App = () => {
-  const [isLoggedIn, setLoggedIn] = useState(
-    localStorage.getItem("isLoggedIn") === "true"
-  );
+  const [isLoggedIn, setLoggedIn] = useState(() => {
+    const storedValue = localStorage.getItem("isLoggedIn");
+    return storedValue ? storedValue === "true" : false;
+  });
 
   useEffect(() => {
     localStorage.setItem("isLoggedIn", isLoggedIn);
   }, [isLoggedIn]);
-  
+
   const ProtectedRoute = ({ element: Element, isLoggedIn, ...props }) => {
     if (!isLoggedIn && (!props.location || props.location.pathname !== "/")) {
       return <Navigate to="/" replace />;
     }
-  
+
     return <Element isLoggedIn={isLoggedIn} {...props} />;
   };
-  
 
   return (
     <BrowserRouter>
       <Routes>
         <Route
           path="/municipalidad"
-          element={<ProtectedRoute element={AdminPage} isLoggedIn={isLoggedIn} />}
+          element={
+            <ProtectedRoute element={AdminPage} isLoggedIn={isLoggedIn} />
+          }
         />
         <Route
           path="/municipalidad/proyectos"
-          element={<ProtectedRoute element={PageProyectos} isLoggedIn={isLoggedIn} />}
+          element={
+            <ProtectedRoute element={PageProyectos} isLoggedIn={isLoggedIn} />
+          }
         />
         <Route
           path="/municipalidad/proyectos/content"
