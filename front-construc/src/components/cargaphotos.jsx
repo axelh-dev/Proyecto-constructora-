@@ -14,15 +14,16 @@ const ComponenteB = ({ proyectoID, updateCounter, role }) => {
   const [loading, setLoading] = useState(true);
   const [selectedImgID, setSelectedImgID] = useState(null);
   const [showDialog, setShowDialog] = useState(false);
-
+  const [selectedImageName, setSelectedImageName] = useState(null);
+  const MAX_NAME_LENGTH = 30;
   const [showDialogModal, setShowDialogModal] = useState(false);
+  const [showFullname, setShowFullname] = useState(false);
 
   const fetchProyectos = async () => {
     try {
       const archivosEndpoint = `http://localhost:8000/api/proyectosfp/${proyectoID}`;
       const archivosResponse = await axios.get(archivosEndpoint);
       const archivos = archivosResponse.data;
-
       if (Array.isArray(archivos)) {
         setProyectos(archivos);
       } else {
@@ -53,8 +54,10 @@ const ComponenteB = ({ proyectoID, updateCounter, role }) => {
     fetchProyectos();
   }, [proyectoID, updateCounter]);
 
-  const openModal = (image) => {
+  const openModal = (image, name) => {
     setSelectedImage(image);
+    setSelectedImageName(name);
+    setShowFullname(false); 
   };
 
   const closeModal = () => {
@@ -76,32 +79,28 @@ const ComponenteB = ({ proyectoID, updateCounter, role }) => {
               <img
                 src={`http://localhost:8000/${pkP.uploadedFile}`}
                 alt={pkP.name}
-                onClick={() => openModal(pkP.uploadedFile)}
+                onClick={() => openModal(pkP.uploadedFile, pkP.name)}
                 className="mb-1"
               />
-            {/* <span className="text-wrap">{pkP.name}</span> */}
-
               {role === "admin" && (
-               <Dropdown
-             className="Dropdown-fotos"
-             >
-               <Dropdown.Toggle
-                 className="dropdown-toggle"
-                 variant="light"
-                 id="dropdown-basic"
-               >
-                 <img
-                   src={icon}
-                   alt="Icon"
-                   style={{ width: "25px", height: "25px" }}
-                 />
-               </Dropdown.Toggle>
-               <Dropdown.Menu>
-                 <Dropdown.Item onClick={() => handleDelete(pkP.id)}>
-                   Eliminar
-                 </Dropdown.Item>
-               </Dropdown.Menu>
-             </Dropdown>
+                <Dropdown className="Dropdown-fotos">
+                  <Dropdown.Toggle
+                    className="dropdown-toggle"
+                    variant="light"
+                    id="dropdown-basic"
+                  >
+                    <img
+                      src={icon}
+                      alt="Icon"
+                      style={{ width: "25px", height: "25px" }}
+                    />
+                  </Dropdown.Toggle>
+                  <Dropdown.Menu>
+                    <Dropdown.Item onClick={() => handleDelete(pkP.id)}>
+                      Eliminar
+                    </Dropdown.Item>
+                  </Dropdown.Menu>
+                </Dropdown>
               )}
             </div>
           ))
@@ -110,7 +109,14 @@ const ComponenteB = ({ proyectoID, updateCounter, role }) => {
       {selectedImage && (
         <Modal show={true} onHide={closeModal} centered>
           <Modal.Header closeButton>
-            <Modal.Title>Imagen</Modal.Title>
+            <Modal.Title className={`fs-4 ${showFullname ? '' : 'text-truncate'}`}>
+              {showFullname
+                ? selectedImageName
+                : selectedImageName.length > MAX_NAME_LENGTH
+                ? `${selectedImageName.substring(0, MAX_NAME_LENGTH)}...`
+                : selectedImageName}
+            </Modal.Title>
+            
           </Modal.Header>
           <Modal.Body>
             <img

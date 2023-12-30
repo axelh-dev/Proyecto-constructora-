@@ -13,6 +13,7 @@
   import axios from "axios";
   import ComponenteA from "../components/cargavideos";
   import ComponenteB from "../components/cargaphotos";
+  import { useNavigate } from "react-router-dom";
 
   const PageFYV = (props) => {
     const location = useLocation();
@@ -24,6 +25,7 @@
     const [updateCounter, setUpdateCounter] = useState(0);
     const [updateCounter1, setUpdateCounter1] = useState(0);
     const [error, setError] = useState("");
+    const navigate = useNavigate();
 
     useEffect(() => {
       document.title = `Proyectos en ${municipio}`;
@@ -43,6 +45,9 @@
       try {
         const endpoint = "http://127.0.0.1:8000/api/logout/";
         await axios.post(endpoint);
+  
+        localStorage.clear();
+        navigate("/");
       } catch (error) {
         console.error("Error al cerrar sesión:", error.message);
       }
