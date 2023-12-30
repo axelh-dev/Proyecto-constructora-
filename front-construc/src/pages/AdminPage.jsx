@@ -297,15 +297,7 @@ const AdminPage = (props) => {
                         alt="img_muni"
                       />
                       <p style={{ margin: "0px" }}>{muni.name}</p>
-                      <Dropdown
-                        style={{
-                          position: "absolute",
-                          left: "73%",
-                          bottom: "3%",
-                          margin: "10px",
-                          width: "20px",
-                        }}
-                      >
+                      <Dropdown className="Dropdown-muni">
                         <Dropdown.Toggle
                           className="btn-sm dropdown-toggle"
                           variant="light"

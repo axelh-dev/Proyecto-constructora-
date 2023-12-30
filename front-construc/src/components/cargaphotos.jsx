@@ -83,13 +83,7 @@ const ComponenteB = ({ proyectoID, updateCounter, role }) => {
 
               {role === "admin" && (
                <Dropdown
-               style={{
-                position: "absolute",
-                left: "70%",
-                bottom:"2px",
-                margin: "10px",
-                width: "20px",
-              }}
+             className="Dropdown-fotos"
              >
                <Dropdown.Toggle
                  className="dropdown-toggle"

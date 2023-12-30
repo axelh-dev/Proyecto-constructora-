@@ -39,3 +39,36 @@
     margin: "10px";
   }
 }
+.Dropdown-fotos {
+  position: absolute;
+  margin: 10px;
+}
+
+.dropdown-toggle {
+  border: none;
+}
+
+.proyectos-container .Dropdown-fotos {
+  position: absolute;
+  bottom: 5px;
+  right: 42px;
+  margin: 10px;
+  width: 20px;
+}
+
+.Dropdown-videos{
+  position: absolute;
+  margin: 10px;
+}
+
+.dropdown-toggle {
+  border: none;
+}
+
+.proyectos-container .Dropdown-videos {
+  position: absolute;
+  top: 5px;
+  right: 48px;
+  margin: 10px;
+  width: 20px;
+}

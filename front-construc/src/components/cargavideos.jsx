@@ -72,14 +72,7 @@ const ComponenteA = ({ proyectoID, updateCounter1, role }) => {
             {/* <span className="text-wrap">{pkP.name}</span> */}
             {role === "admin" && (
               <Dropdown
-                style={{
-                  position: "absolute",
-                  top:"1%",
-                  left: "62%",
-                  margin: "10px",
-                  width: "20px",
-                  backgroundColor: ""
-                }}
+             className="Dropdown-videos"
               >
                 <Dropdown.Toggle
                   className="dropdown-toggle"

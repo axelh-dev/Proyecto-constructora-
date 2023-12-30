@@ -186,3 +186,21 @@ $color-link-hover: black;
     font-size: 1rem; // Ajustes adicionales para pantallas más pequeñas si es necesario
   }
 }
+
+
+.Dropdown-pro {
+  position: absolute;
+  margin: 10px;
+}
+
+.dropdown-toggle {
+  border: none;
+}
+
+.proyectos-container .Dropdown-pro {
+  position: absolute;
+  bottom: 8px;
+  right: 30px;
+  margin: 10px;
+  width: 20px;
+}

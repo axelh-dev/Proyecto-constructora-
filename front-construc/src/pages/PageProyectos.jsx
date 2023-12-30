@@ -219,14 +219,8 @@ const PageProyectos = (props) => {
                     <p className="item-pro">Fecha: {proyecto.date}</p>
                   </div>
                   {role === "admin" && (
-                    <Dropdown
-                    style={{
-                      position: "absolute",
-                      left: "72%",
-                      bottom: "2%",
-                      margin: "10px",
-                      width: "20px",
-                    }}
+                    <Dropdown 
+                    className="Dropdown-pro"
                     >
                       <Dropdown.Toggle
                         className="btn-sm dropdown-toggle"

@@ -177,3 +177,21 @@ $color-link-hover: black;
   font-weight: 600;
   font-size: 17px;
 }
+
+
+.Dropdown-muni {
+  position: absolute;
+  margin: 10px;
+}
+
+.dropdown-toggle {
+  border: none;
+}
+
+.municipalidades-container .Dropdown-muni {
+  position: absolute;
+  bottom: 8px;
+  right: 30px;
+  margin: 10px;
+  width: 20px;
+}
