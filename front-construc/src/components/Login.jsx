@@ -22,10 +22,8 @@ const Login = ({ setLoggedIn }) => {
 
   useEffect(() => {
     const intervalId = setInterval(() => {
-      // Cambiar la opacidad a 0 al comenzar el cambio de imagen
       setBackgroundOpacity(0);
 
-      // Después de un breve retraso, restablecer la opacidad a 1
       setTimeout(() => {
         setBackgroundOpacity(1);
         setCurrentImageIndex((prevIndex) => (prevIndex + 1) % images.length);

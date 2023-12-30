@@ -196,10 +196,11 @@ const AdminPage = (props) => {
     try {
       const endpoint = "http://127.0.0.1:8000/api/logout/";
       await axios.post(endpoint);
-
-      // Redirige a la página de inicio de sesión u otra página después de cerrar sesión
+  
+      // Elimina solo la clave relacionada con la sesión
+      localStorage.removeItem("isLoggedIn");
+      
       // Puedes ajustar la ruta según tus necesidades
-      localStorage.clear();
       navigate("/");
     } catch (error) {
       console.error("Error al cerrar sesión:", error.message);

@@ -59,11 +59,17 @@ const PageProyectos = (props) => {
     try {
       const endpoint = "http://127.0.0.1:8000/api/logout/";
       await axios.post(endpoint);
+  
+      // Elimina solo la clave relacionada con la sesión
+      localStorage.removeItem("isLoggedIn");
+      
+      // Puedes ajustar la ruta según tus necesidades
       navigate("/");
     } catch (error) {
       console.error("Error al cerrar sesión:", error.message);
     }
   };
+
 
   const handleGuardarProyecto = async () => {
     try {
