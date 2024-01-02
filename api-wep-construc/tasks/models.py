@@ -67,7 +67,7 @@ class Projects(models.Model):
     project_id = models.BigAutoField(primary_key=True)
     munici_id = models.ForeignKey(municipalidad, on_delete=models.CASCADE, default=1)
     name = models.CharField(max_length=50, null=False)
-    nog = models.CharField(max_length=50, null=False,   default=10000)
+    nog = models.CharField(max_length=50, null=False,   unique=True ,default=1)
     date = models.DateField(null=True)
 
     def __str__(self):
