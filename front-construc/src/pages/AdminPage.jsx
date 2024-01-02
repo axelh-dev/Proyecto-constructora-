@@ -185,10 +185,18 @@ const AdminPage = () => {
         setErrorArchivouser(`Error al crear el usuario. Estado de la respuesta: ${response.status}`);
       }
     } catch (error) {
-      console.error("Error en la solicitud POST:", error.message);
-      setErrorArchivouser(`Error en la solicitud POST: ${error.message}`);
+      if (error.response && error.response.status === 400 && error.response.data) {
+        if (error.response.data.username && error.response.data.username.includes("Usuario ya existe")) {
+          setErrorArchivouser("Usuario ya existe");
+        } else {
+          setErrorArchivouser("Usuario ya existe");
+        }
+      } else {
+        setErrorArchivouser(`Error en la solicitud POST: ${error.message}`);
+      }
     }
-  };  
+  };
+  
 
   const handleCerrarSesion = async () => {
     try {
@@ -433,7 +441,7 @@ const AdminPage = () => {
                   Seleccionar una municipalidad
                 </option>
                 {municipalidades
-                  .filter((muni) => muni.name !== "admin")
+                  .filter((muni) => muni.name !== municipio)
                   .map((muni) => (
                     <option key={muni.munici_id} value={muni.name}>
                       {muni.name}
