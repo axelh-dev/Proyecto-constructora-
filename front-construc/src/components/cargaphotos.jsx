@@ -6,7 +6,7 @@ import Button from "react-bootstrap/Button";
 import Dropdown from "react-bootstrap/Dropdown";
 import NavDropdown from "react-bootstrap/NavDropdown";
 import icon from "../assets/icon.svg";
-import DialogModal from '../components/msgExito';
+import DialogModal from "../components/msgExito";
 
 const ComponenteB = ({ proyectoID, updateCounter, role }) => {
   const [proyectos, setProyectos] = useState([]);
@@ -42,9 +42,11 @@ const ComponenteB = ({ proyectoID, updateCounter, role }) => {
       await axios.delete(`http://localhost:8000/api/v1/photos/${id}/`);
       console.log(`Foto con ID ${id} eliminada exitosamente.`);
       setSelectedImage(null); // Cerrar el modal de imagen
-      setSelectedImgID(id)
+      setSelectedImgID(id);
       setShowDialog(true); // Mostrar el DialogModal
-      setProyectos((prevProyectos) => prevProyectos.filter((proyecto) => proyecto.id !== id));
+      setProyectos((prevProyectos) =>
+        prevProyectos.filter((proyecto) => proyecto.id !== id)
+      );
     } catch (error) {
       console.error(`Error al eliminar la foto con ID ${id}`, error);
     }
@@ -57,7 +59,7 @@ const ComponenteB = ({ proyectoID, updateCounter, role }) => {
   const openModal = (image, name) => {
     setSelectedImage(image);
     setSelectedImageName(name);
-    setShowFullname(false); 
+    setShowFullname(false);
   };
 
   const closeModal = () => {
@@ -70,60 +72,61 @@ const ComponenteB = ({ proyectoID, updateCounter, role }) => {
     <div className="proyectos-container container-fluid">
       {loading ? (
         <p>Cargando...</p>
+      ) : Array.isArray(proyectos) && proyectos.length === 0 ? (
+        <p>No hay imágenes disponibles</p>
       ) : (
-        Array.isArray(proyectos) && proyectos.length === 0 ? (
-          <p>No hay imágenes disponibles</p>
-        ) : (
-          proyectos.map((pkP) => (
-            <div key={pkP.id} className="card" style={{ position: "relative" }}>
-              <img
-                src={`http://localhost:8000/${pkP.uploadedFile}`}
-                alt={pkP.name}
-                onClick={() => openModal(pkP.uploadedFile, pkP.name)}
-                className="mb-1"
-              />
-              {role === "admin" && (
-                <Dropdown className="Dropdown-fotos">
-                  <Dropdown.Toggle
-                    className="dropdown-toggle"
-                    variant="light"
-                    id="dropdown-basic"
-                  >
-                    <img
-                      src={icon}
-                      alt="Icon"
-                      style={{ width: "25px", height: "25px" }}
-                    />
-                  </Dropdown.Toggle>
-                  <Dropdown.Menu>
-                    <Dropdown.Item onClick={() => handleDelete(pkP.id)}>
-                      Eliminar
-                    </Dropdown.Item>
-                  </Dropdown.Menu>
-                </Dropdown>
-              )}
-            </div>
-          ))
-        )
+        proyectos.map((pkP) => (
+          <div key={pkP.id} className="card" style={{ position: "relative" }}>
+            <img
+              src={`http://localhost:8000/${pkP.uploadedFile}`}
+              alt={pkP.name}
+              onClick={() => openModal(pkP.uploadedFile, pkP.name)}
+            />
+            {role === "admin" && (
+              <Dropdown className="Dropdown-fotos">
+                <Dropdown.Toggle
+                  className="dropdown-toggle"
+                  variant="light"
+                  id="dropdown-basic"
+                >
+                  <img
+                    src={icon}
+                    alt="Icon"
+                    style={{ width: "25px", height: "25px" }}
+                  />
+                </Dropdown.Toggle>
+                <Dropdown.Menu>
+                  <Dropdown.Item onClick={() => handleDelete(pkP.id)}>
+                    Eliminar
+                  </Dropdown.Item>
+                </Dropdown.Menu>
+              </Dropdown>
+            )}
+          </div>
+        ))
       )}
       {selectedImage && (
         <Modal show={true} onHide={closeModal} centered>
           <Modal.Header closeButton>
-            <Modal.Title className={`fs-4 ${showFullname ? '' : 'text-truncate'}`}>
+            <Modal.Title
+              className={`fs-6 ${showFullname ? "" : "text-truncate"}`}
+            >
               {showFullname
                 ? selectedImageName
                 : selectedImageName.length > MAX_NAME_LENGTH
                 ? `${selectedImageName.substring(0, MAX_NAME_LENGTH)}...`
                 : selectedImageName}
             </Modal.Title>
-            
           </Modal.Header>
           <Modal.Body>
-            <img
-              src={`http://localhost:8000/${selectedImage}`}
-              alt={`Imagen de ${selectedImage}`}
-              width="100%"
-            />
+            {/* Agrega un contenedor con estilos para permitir el desplazamiento vertical */}
+            <div style={{ overflowY: "auto", maxHeight: "70vh" }}>
+              <img
+                src={`http://localhost:8000/${selectedImage}`}
+                alt={`Imagen de ${selectedImage}`}
+                style={{ width: "100%", height: "auto" }}
+              />
+            </div>
           </Modal.Body>
           <Modal.Footer>
             <Button variant="secondary" onClick={closeModal}>
@@ -132,10 +135,7 @@ const ComponenteB = ({ proyectoID, updateCounter, role }) => {
           </Modal.Footer>
         </Modal>
       )}
-
-      {selectedImgID && (
-        <DialogModal show={showDialog} onClose={closeModal}/> 
-      )}
+      {selectedImgID && <DialogModal show={showDialog} onClose={closeModal} />}
     </div>
   );
 };

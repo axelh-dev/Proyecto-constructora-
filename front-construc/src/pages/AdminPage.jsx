@@ -447,11 +447,13 @@ const AdminPage = (props) => {
                 <option value="" disabled>
                   Seleccionar una municipalidad
                 </option>
-                {municipalidades.map((muni) => (
-                  <option key={muni.munici_id} value={muni.name}>
-                    {muni.name}
-                  </option>
-                ))}
+                {municipalidades
+                  .filter((muni) => muni.name !== "admin")
+                  .map((muni) => (
+                    <option key={muni.munici_id} value={muni.name}>
+                      {muni.name}
+                    </option>
+                  ))}s
               </select>
               {errorArchivouser && (
                 <p className="error-message">{errorArchivouser}</p>

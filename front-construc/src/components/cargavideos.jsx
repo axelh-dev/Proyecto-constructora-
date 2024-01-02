@@ -8,7 +8,8 @@ const ComponenteA = ({ proyectoID, updateCounter1, role }) => {
   const [proyectos, setProyectos] = useState([]);
   const [showDialog, setShowDialog] = useState(false);
   const [selectedVideoId, setSelectedVideoId] = useState(null);
-  const videoRefs = useRef({}); // Referencias a los elementos de video
+  const [isPlaying, setIsPlaying] = useState(false);
+  const videoRef = useRef(null); // Referencia al elemento de video
 
   const fetchProyectos = async () => {
     try {
@@ -40,6 +41,18 @@ const ComponenteA = ({ proyectoID, updateCounter1, role }) => {
     }
   };
 
+  const playVideo = (id) => {
+    if (selectedVideoId === id && isPlaying) {
+      // Si se hace clic en el video que ya se está reproduciendo, pausarlo
+      setIsPlaying(false);
+      videoRef.current.pause();
+    } else {
+      // Si se hace clic en un nuevo video, reproducirlo y actualizar el estado
+      setIsPlaying(true);
+      setSelectedVideoId(id);
+    }
+  };
+
   useEffect(() => {
     fetchProyectos();
   }, [proyectoID, updateCounter1]);
@@ -55,13 +68,15 @@ const ComponenteA = ({ proyectoID, updateCounter1, role }) => {
         <p>No hay videos disponibles</p>
       ) : (
         proyectos.map((pkP) => (
-          <div key={pkP.id} className="card ">
+          <div key={pkP.id} className="card">
             <video
               width="100%"
               height="auto"
-              ref={(el) => (videoRefs.current[pkP.id] = el)}
+              ref={videoRef}
               controls
               muted // Silencio por defecto
+              onPlay={() => playVideo(pkP.id)}
+              onClick={() => playVideo(pkP.id)}
             >
               <source
                 src={`http://localhost:8000/${pkP.uploadedFile}`}
@@ -69,11 +84,8 @@ const ComponenteA = ({ proyectoID, updateCounter1, role }) => {
               />
               Tu navegador no soporta el tag de video.
             </video>
-            {/* <span className="text-wrap">{pkP.name}</span> */}
             {role === "admin" && (
-              <Dropdown
-             className="Dropdown-videos"
-              >
+              <Dropdown className="Dropdown-videos">
                 <Dropdown.Toggle
                   className="dropdown-toggle"
                   variant="light"
@@ -95,9 +107,7 @@ const ComponenteA = ({ proyectoID, updateCounter1, role }) => {
           </div>
         ))
       )}
-      {selectedVideoId && (
-        <DialogModal show={showDialog} onClose={closeModal} />
-      )}
+      {selectedVideoId && <DialogModal show={showDialog} onClose={closeModal} />}
     </div>
   );
 };
