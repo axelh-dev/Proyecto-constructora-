@@ -73,6 +73,7 @@ const ComponenteA = ({ proyectoID, updateCounter1, role }) => {
               width="100%"
               height="auto"
               ref={videoRef}
+              controlsList="nodownload" 
               controls
               muted // Silencio por defecto
               onPlay={() => playVideo(pkP.id)}
