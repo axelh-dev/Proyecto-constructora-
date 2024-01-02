@@ -35,6 +35,7 @@ const AdminPage = () => {
   const [successMessage, setSuccessMessage] = useState("");
   const role_id_fija = 2;
   const [mostrarContrasena, setMostrarContrasena] = useState(false);
+  const [errorContrasena, setErrorContrasena] = useState("");
 
   useEffect(() => {
     if (!role || !usuario || !municipio) {
@@ -58,7 +59,17 @@ const AdminPage = () => {
     setErrorArchivo("");
     setErrorArchivouser("");
     setArchivoProyecto(null);
+    setNombreMuni("");
+    setNombreUsuario("");
+    setContrasenaUsuario("");
+    setSelectedMunicipioId("");
+    setArchivoProyecto(null);
+    setShowDialog(false);
+    setShowSuccessMessage(false);
+    setErrorContrasena("");
+    setSelectedMunicipio("");
   };
+  
 
   const handleCloseModal = () => {
     setShowModal(false);
@@ -84,21 +95,31 @@ const AdminPage = () => {
   const handleGuardarMuni = async () => {
     try {
       setErrorArchivo("");
-
-      if (!nombreMuni || !archivoProyecto || !isImageFile(archivoProyecto)) {
-        setErrorArchivo("Verifica los datos de la municipalidad");
+  
+      if (!nombreMuni) {
+        setErrorArchivo("Nombre de Municipalidad Vacío");
         return;
       }
-
+  
+      if (!archivoProyecto) {
+        setErrorArchivo("No ha seleccionado ningún formato de imagen");
+        return;
+      }
+  
+      if (!isImageFile(archivoProyecto)) {
+        setErrorArchivo("El formato seleccionado no es una imagen");
+        return;
+      }
+  
       const formData = new FormData();
       formData.append("name", nombreMuni);
       formData.append("uploadedFile", archivoProyecto);
-
+  
       const endPoint = "http://localhost:8000/api/v1/municipalidades/";
       const response = await axios.post(endPoint, formData);
-
+  
       if (response.status === 201) {
-        setSuccessMessage("Se ha creado el municipio exitosamente.");
+        setSuccessMessage("Se ha creado la municipalidad exitosamente.");
         setShowSuccessMessage(true);
         setArchivoProyecto(null);
         setErrorArchivo("");
@@ -106,7 +127,7 @@ const AdminPage = () => {
           ...prevMunicipalidades,
           response.data,
         ]);
-
+  
         setNombreMuni("");
         handleCloseModal();
       } else {
@@ -118,29 +139,43 @@ const AdminPage = () => {
       setErrorArchivo("Error en la solicitud POST");
     }
   };
+  
 
   const handleGuardarUser = async () => {
     try {
-      if (!nombreUsuario.trim() || !contrasenaUsuario.trim() || !selectedMunicipioId || !role_id_fija) {
-        setErrorArchivouser("Verifica los datos del usuario");
+      setErrorArchivouser(""); // Limpiar el error general
+      setErrorContrasena(""); // Limpiar el error específico de la contraseña
+  
+      if (!nombreUsuario.trim()) {
+        setErrorArchivouser("Campo Nombre Vacío");
         return;
       }
-
+  
+      if (contrasenaUsuario.length < 8) {
+        setErrorContrasena("Contraseña es menor a 8 dígitos");
+        return;
+      }
+  
+      if (!selectedMunicipioId) {
+        setErrorArchivouser("No hay seleccionada una municipalidad");
+        return;
+      }
+  
       const endPoint = "http://127.0.0.1:8000/api/register/";
-
+  
       const postData = {
         username: nombreUsuario,
         password: contrasenaUsuario,
         munici_id: selectedMunicipioId,
         role_id: role_id_fija,
       };
-
+  
       const response = await axios.post(endPoint, postData);
-
+  
       if (response.status === 201) {
         setSuccessMessage("Se ha creado el usuario exitosamente.");
         setShowSuccessMessage(true);
-
+  
         setNombreUsuario("");
         setContrasenaUsuario("");
         setSelectedMunicipio("");
@@ -153,7 +188,7 @@ const AdminPage = () => {
       console.error("Error en la solicitud POST:", error.message);
       setErrorArchivouser(`Error en la solicitud POST: ${error.message}`);
     }
-  };
+  };  
 
   const handleCerrarSesion = async () => {
     try {
@@ -408,6 +443,7 @@ const AdminPage = () => {
               {errorArchivouser && (
                 <p className="error-message">{errorArchivouser}</p>
               )}
+              {errorContrasena && <p className="error-message">{errorContrasena}</p>}
               <Button
                 variant="primary"
                 className="GuardarButtonRight mt-2"

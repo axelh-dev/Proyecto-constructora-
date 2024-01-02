@@ -73,7 +73,7 @@ const ComponenteB = ({ proyectoID, updateCounter, role }) => {
       {loading ? (
         <p>Cargando...</p>
       ) : Array.isArray(proyectos) && proyectos.length === 0 ? (
-        <p>No hay imágenes disponibles</p>
+        <p className="colorN">No hay imágenes disponibles</p>
       ) : (
         proyectos.map((pkP) => (
           <div key={pkP.id} className="card" style={{ position: "relative" }}>

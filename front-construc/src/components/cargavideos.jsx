@@ -65,7 +65,7 @@ const ComponenteA = ({ proyectoID, updateCounter1, role }) => {
   return (
     <div className="proyectos-container container-fluid">
       {proyectos.length === 0 ? (
-        <p>No hay videos disponibles</p>
+        <p className="colorN">No hay videos disponibles</p>
       ) : (
         proyectos.map((pkP) => (
           <div key={pkP.id} className="card">
