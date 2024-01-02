@@ -76,7 +76,6 @@
         // Validar el tipo de archivo antes de realizar la solicitud POST
         if ((tipoArchivo === "Fotos" && isImageFile(archivoProyecto)) || (tipoArchivo === "Videos" && isVideoFile(archivoProyecto))) {
           const response = await axios.post(endpoint, formData);
-  
           if (response.status === 201) {
             console.log(`Archivo de ${tipoArchivo.toLowerCase()} creado exitosamente`);
             if (tipoArchivo === "Fotos") {
