@@ -54,7 +54,7 @@ $color-link-hover: black;
 }
 
 .municipalidad-card {
-  flex: 0 0 calc(30% - 20px); /* Ajusta según el número de columnas deseadas */
+  flex: 0 0 calc(25% - 20px); /* Ajusta según el número de columnas deseadas */
   margin: 10px;
   padding: 15px;
   border: 1px solid #ccc;
@@ -79,7 +79,7 @@ $color-link-hover: black;
 
 @media only screen and (max-width: 1200px) {
  .municipalidad-card {
-    flex-basis: calc(48% - 20px); /* Dos columnas en pantallas medianas */
+    flex-basis: calc(38% - 20px); /* Dos columnas en pantallas medianas */
   }
 }
 

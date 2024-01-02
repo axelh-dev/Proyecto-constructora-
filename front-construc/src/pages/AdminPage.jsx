@@ -1,21 +1,22 @@
 import React, { useState, useEffect } from "react";
-import { useLocation } from "react-router-dom";
-import Container from "react-bootstrap/Container";
-import Nav from "react-bootstrap/Nav";
-import Navbar from "react-bootstrap/Navbar";
-import Button from "react-bootstrap/Button";
-import Modal from "react-bootstrap/Modal";
+import { useLocation, useNavigate } from "react-router-dom";
+import {
+  Container,
+  Nav,
+  Navbar,
+  Button,
+  Modal,
+  Dropdown,
+} from "react-bootstrap";
 import axios from "axios";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "../Estilos/AdminStyles.scss";
 import logo from "../assets/logo.svg";
-import { useNavigate } from "react-router-dom";
-import Dropdown from "react-bootstrap/Dropdown";
 import icon from "../assets/icon.svg";
-import DialogModal from "../components/msgExito"; // Importa el componente DialogModal
+import DialogModal from "../components/msgExito";
 import SuccessMessage from "../components/alert";
 
-const AdminPage = (props) => {
+const AdminPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { usuario, municipio, role, idMuni } = location.state || {};
@@ -37,7 +38,7 @@ const AdminPage = (props) => {
 
   useEffect(() => {
     if (!role || !usuario || !municipio) {
-      navigate("/"); // Redirect to login page
+      navigate("/");
     }
     const fetchMunicipalidades = async () => {
       try {
@@ -77,40 +78,26 @@ const AdminPage = (props) => {
 
     setTimeout(() => {
       setShowSuccessMessage(false);
-    }, 10000); // Cerrar después de 10 segundos
+    }, 10000);
   };
 
   const handleGuardarMuni = async () => {
     try {
       setErrorArchivo("");
 
-      if (!nombreMuni) {
-        setErrorArchivo("Nombre de la municipalidad vacío");
-        return;
-      }
-
-      if (!archivoProyecto) {
-        setErrorArchivo("Campo de selección vacío");
-        return;
-      }
-
-      if (!isImageFile(archivoProyecto)) {
-        setErrorArchivo("Archivo no es una imagen");
+      if (!nombreMuni || !archivoProyecto || !isImageFile(archivoProyecto)) {
+        setErrorArchivo("Verifica los datos de la municipalidad");
         return;
       }
 
       const formData = new FormData();
       formData.append("name", nombreMuni);
-
-      if (archivoProyecto) {
-        formData.append("uploadedFile", archivoProyecto);
-      }
+      formData.append("uploadedFile", archivoProyecto);
 
       const endPoint = "http://localhost:8000/api/v1/municipalidades/";
       const response = await axios.post(endPoint, formData);
 
       if (response.status === 201) {
-        console.log("Municipalidad creada exitosamente");
         setSuccessMessage("Se ha creado el municipio exitosamente.");
         setShowSuccessMessage(true);
         setArchivoProyecto(null);
@@ -120,38 +107,22 @@ const AdminPage = (props) => {
           response.data,
         ]);
 
-        // Reinicia los campos y cierra el modal solo si la operación es exitosa
         setNombreMuni("");
         handleCloseModal();
-        // Agrega aquí la lógica para cerrar el modal
       } else {
-        console.error(
-          "Error al crear la municipalidad. Estado de la respuesta:",
-          response.status
-        );
+        console.error("Error al crear la municipalidad. Estado de la respuesta:", response.status);
         setErrorArchivo("Error al crear la municipalidad");
       }
     } catch (error) {
       console.error("Error en la solicitud POST:", error.message);
       setErrorArchivo("Error en la solicitud POST");
-      // Agrega aquí la lógica para cerrar el modal en caso de error
     }
   };
 
   const handleGuardarUser = async () => {
     try {
-      if (!nombreUsuario.trim()) {
-        setErrorArchivouser("Nombre de Usuario Vacío");
-        return;
-      }
-
-      if (!contrasenaUsuario.trim()) {
-        setErrorArchivouser("Contraseña Vacía");
-        return;
-      }
-
-      if (!selectedMunicipioId || !role_id_fija) {
-        setErrorArchivouser("No ha seleccionado municipalidad");
+      if (!nombreUsuario.trim() || !contrasenaUsuario.trim() || !selectedMunicipioId || !role_id_fija) {
+        setErrorArchivouser("Verifica los datos del usuario");
         return;
       }
 
@@ -163,33 +134,24 @@ const AdminPage = (props) => {
         munici_id: selectedMunicipioId,
         role_id: role_id_fija,
       };
-      console.log(postData);
 
       const response = await axios.post(endPoint, postData);
 
       if (response.status === 201) {
-        console.log("Usuario creado exitosamente");
         setSuccessMessage("Se ha creado el usuario exitosamente.");
         setShowSuccessMessage(true);
 
-        // Reinicia los campos solo si la operación es exitosa
         setNombreUsuario("");
         setContrasenaUsuario("");
         setSelectedMunicipio("");
         handleCloseModal();
       } else {
-        console.error(
-          "Error al crear el usuario. Estado de la respuesta:",
-          response.status
-        );
-        setErrorArchivouser(
-          "Error al crear el usuario. Estado de la respuesta: " +
-            response.status
-        );
+        console.error("Error al crear el usuario. Estado de la respuesta:", response.status);
+        setErrorArchivouser(`Error al crear el usuario. Estado de la respuesta: ${response.status}`);
       }
     } catch (error) {
       console.error("Error en la solicitud POST:", error.message);
-      setErrorArchivouser("Error en la solicitud POST: " + error.message);
+      setErrorArchivouser(`Error en la solicitud POST: ${error.message}`);
     }
   };
 
@@ -198,10 +160,7 @@ const AdminPage = (props) => {
       const endpoint = "http://127.0.0.1:8000/api/logout/";
       await axios.post(endpoint);
 
-      // Elimina solo la clave relacionada con la sesión
       localStorage.removeItem("isLoggedIn");
-
-      // Puedes ajustar la ruta según tus necesidades
       navigate("/");
     } catch (error) {
       console.error("Error al cerrar sesión:", error.message);
@@ -210,21 +169,14 @@ const AdminPage = (props) => {
 
   const handleDelete = async (municipioId) => {
     try {
-      const response = await axios.delete(
-        `http://127.0.0.1:8000/api/v1/municipalidades/${municipioId}/`
-      );
+      const response = await axios.delete(`http://127.0.0.1:8000/api/v1/municipalidades/${municipioId}/`);
 
       if (response.status === 204) {
-        console.log("Municipio eliminado exitosamente");
         setSelectedMunicipioId(municipioId);
         setShowDialog(true);
-        setMunicipalidades((prevMunicipalidades) =>
-          prevMunicipalidades.filter((muni) => muni.munici_id !== municipioId)
-        );
+        setMunicipalidades((prevMunicipalidades) => prevMunicipalidades.filter((muni) => muni.munici_id !== municipioId));
       } else {
-        console.error(
-          `Error al eliminar el municipio. Estado de la respuesta: ${response.status}`
-        );
+        console.error(`Error al eliminar el municipio. Estado de la respuesta: ${response.status}`);
       }
     } catch (error) {
       console.error("Error en la solicitud DELETE:", error.message);
@@ -235,9 +187,9 @@ const AdminPage = (props) => {
     <>
       <Navbar expand="md" bg="light" data-bs-theme="light">
         <Container>
-          <Navbar.Brand href="/municipalidad">
+          <Navbar.Brand href="">
             <img
-              src={logo} // Usar la imagen de la municipalidad si está disponible, de lo contrario, usa el logo predeterminado
+              src={logo}
               width="100"
               className="d-inline-block align-top"
               alt="Logo Constructora"
@@ -281,7 +233,6 @@ const AdminPage = (props) => {
             <div className="municipalidades-container">
               {municipalidades.map(
                 (muni) =>
-                  // Agrega la validación aquí
                   muni.munici_id !== idMuni && (
                     <div
                       key={muni.munici_id}
@@ -291,8 +242,7 @@ const AdminPage = (props) => {
                       <img
                         className="img"
                         src={
-                          muni.uploadedFile ===
-                          "http://localhost:8000/media/NULL"
+                          muni.uploadedFile === "http://localhost:8000/media/NULL"
                             ? logo
                             : muni.uploadedFile
                         }
@@ -453,7 +403,7 @@ const AdminPage = (props) => {
                     <option key={muni.munici_id} value={muni.name}>
                       {muni.name}
                     </option>
-                  ))}s
+                  ))}
               </select>
               {errorArchivouser && (
                 <p className="error-message">{errorArchivouser}</p>

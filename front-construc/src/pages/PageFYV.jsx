@@ -126,7 +126,7 @@
       <>
         <Navbar expand="md" bg="light" data-bs-theme="light">
           <Container>
-            <Navbar.Brand href="/municipalidad/proyectos/content">
+            <Navbar.Brand href="">
               <img
                 src={logo}
                 width="100"
