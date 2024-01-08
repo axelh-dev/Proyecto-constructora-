@@ -172,7 +172,6 @@ class PhotosViewSet(viewsets.ModelViewSet):
     def destroy(self, request, *args, **kwargs):
         instance = self.get_object()
         
-        # Agregar la lógica para eliminar el objeto de S3 aquí
         if instance.uploadedFile.name:
             try:
                 default_storage.delete(instance.uploadedFile.name)
@@ -189,7 +188,6 @@ class VideosViewSet(viewsets.ModelViewSet):
     def destroy(self, request, *args, **kwargs):
         instance = self.get_object()
         
-        # Agregar la lógica para eliminar el objeto de S3 aquí
         if instance.uploadedFile.name:
             try:
                 default_storage.delete(instance.uploadedFile.name)

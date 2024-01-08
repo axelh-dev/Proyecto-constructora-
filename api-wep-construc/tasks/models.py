@@ -3,6 +3,10 @@ from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseU
 from django.db.models.signals import pre_delete
 from django.dispatch import receiver
 from django.core.files.storage import default_storage
+from botocore.exceptions import ClientError
+import logging
+logger = logging.getLogger(__name__)
+
 
 def upload_to(instance, filename):
     return f'{instance.__class__.__name__.lower()}s/{filename}'
@@ -35,7 +39,10 @@ class municipalidad(models.Model):
     @receiver(pre_delete, sender='tasks.municipalidad')
     def eliminar_archivo_s3_municipalidad(sender, instance, **kwargs):
         if instance.uploadedFile.name:
-            default_storage.delete(instance.uploadedFile.name)
+            try:
+                default_storage.delete(instance.uploadedFile.name)
+            except ClientError as e:
+                logger.error(f"Error deleting file from S3: {e}")
     
 class userrole(models.Model):
     role_id = models.BigAutoField(primary_key=True)
@@ -94,8 +101,12 @@ class Photos(models.Model):
 
     @receiver(pre_delete, sender='tasks.Photos')
     def eliminar_archivo_s3_photo(sender, instance, **kwargs):
-        if instance.uploadedFile.name:
+     if instance.uploadedFile.name:
+        try:
             default_storage.delete(instance.uploadedFile.name)
+        except ClientError as e:
+            logger.error(f"Error deleting file from S3: {e}")
+
 
 class Videos(models.Model):
     id = models.BigAutoField(primary_key=True)
@@ -108,5 +119,8 @@ class Videos(models.Model):
 
     @receiver(pre_delete, sender='tasks.Videos')
     def eliminar_archivo_s3_video(sender, instance, **kwargs):
-        if instance.uploadedFile.name:
+     if instance.uploadedFile.name:
+        try:
             default_storage.delete(instance.uploadedFile.name)
+        except ClientError as e:
+            logger.error(f"Error deleting file from S3: {e}")

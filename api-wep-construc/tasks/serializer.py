@@ -61,9 +61,10 @@ class MunicipalidadSerializer(serializers.ModelSerializer):
         model = municipalidad
         fields = '__all__'
 
-    @receiver(pre_delete, sender='tasks.municipalidad')
-    def eliminar_archivo_s3_municipalidad(sender, instance, **kwargs):
-     if instance.uploadedFile.name:
+# Eliminar archivo de S3 al eliminar una municipalidad
+@receiver(pre_delete, sender=municipalidad)
+def eliminar_archivo_s3_municipalidad(sender, instance, **kwargs):
+    if instance.uploadedFile.name:
         try:
             default_storage.delete(instance.uploadedFile.name)
         except ClientError as e:
@@ -84,16 +85,27 @@ class PhotosSerializer(serializers.ModelSerializer):
         model = Photos
         fields = '__all__'
 
+    # Eliminar archivo de S3 al eliminar una foto
     @receiver(pre_delete, sender=Photos)
     def eliminar_archivo_s3_photo(sender, instance, **kwargs):
         if instance.uploadedFile.name:
-            default_storage.delete(instance.uploadedFile.name)
+            try:
+                default_storage.delete(instance.uploadedFile.name)
+            except ClientError as e:
+                logger.error(f"Error deleting file from S3: {e}")
+
+# Resto de tu código...
+
 class VideosSerializer(serializers.ModelSerializer):
     class Meta:
         model = Videos
         fields = '__all__'
 
+    # Eliminar archivo de S3 al eliminar un video
     @receiver(pre_delete, sender=Videos)
     def eliminar_archivo_s3_video(sender, instance, **kwargs):
         if instance.uploadedFile.name:
-            default_storage.delete(instance.uploadedFile.name)
+            try:
+                default_storage.delete(instance.uploadedFile.name)
+            except ClientError as e:
+                logger.error(f"Error deleting file from S3: {e}")
