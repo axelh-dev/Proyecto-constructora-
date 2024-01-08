@@ -14,7 +14,6 @@ from django.contrib.auth import  login, logout, authenticate
 from rest_framework import permissions, status
 from .validations import custom_validation, validate_username, validate_password
 from rest_framework.exceptions import ValidationError
-
 @csrf_exempt
 @require_POST
 def cargar_archivo(request, tipo_archivo):
@@ -24,7 +23,7 @@ def cargar_archivo(request, tipo_archivo):
     if tipo_archivo == 'photo':
         serializer = PhotosSerializer(data=data)
     elif tipo_archivo == 'video':
-        serializer = VideosSerializer(data=data)  # Corrección aquí
+        serializer = VideosSerializer(data=data)
     else:
         return JsonResponse({'error': 'Tipo de archivo no válido'})
 

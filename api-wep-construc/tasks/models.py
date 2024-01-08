@@ -1,6 +1,10 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin,BaseUserManager
 
+def upload_to(instance, filename):
+    return f'{instance.__class__.__name__.lower()}s/{filename}'
+
+
 class AppUserManager(BaseUserManager):
     def create_user(self, username, password=None, **extra_fields):
         if not username:
@@ -16,8 +20,6 @@ class AppUserManager(BaseUserManager):
         extra_fields.setdefault('is_staff', True)
         extra_fields.setdefault('is_superuser', True)
         return self.create_user(username, password, **extra_fields)
-
-
 
 class municipalidad(models.Model):
     munici_id = models.BigAutoField(primary_key=True)

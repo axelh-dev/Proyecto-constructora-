@@ -139,7 +139,6 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
-STATIC_URL = 'static/'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
@@ -157,11 +156,27 @@ REST_FRAMEWORK = {
 }
 
 
-MEDIA_URL = "/media/"
-MEDIA_ROOT = os.path.join(BASE_DIR, "media")
-
 
 
 AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
 ]
+
+
+STATIC_URL = '/static/'
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+
+#s3access
+
+AWS_ACCESS_KEY_ID = 'AKIAUNGW4FNODUQDGOCZ'
+AWS_SECRET_ACCESS_KEY = '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'
+AWS_STORAGE_BUCKET_NAME = 'construc-files'
+AWS_S3_SIGNATURE_NAME = 's3v4'
+AWS_S3_DATE_OVERRIDE = 'X-Amz-Date'
+AWS_S3_REGION_NAME = 'us-east-2'
+AWS_S3_FILE_OVERWRITE = False
+AWS_DEFAULT_ACL = None
+AWS_S3_VERITY = True  
+DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
