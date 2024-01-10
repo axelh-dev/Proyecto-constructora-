@@ -2,13 +2,17 @@ import React, { useEffect, useState, useRef } from "react";
 import axios from "axios";
 import Dropdown from "react-bootstrap/Dropdown";
 import icon from "../assets/icon.svg";
+import info from "../assets/info-circle.svg";
 import DialogModal from "./msgExito";
+import OverlayTrigger from "react-bootstrap/OverlayTrigger";
+import Tooltip from "react-bootstrap/Tooltip";
 
 const ComponenteA = ({ proyectoID, updateCounter1, role }) => {
   const [proyectos, setProyectos] = useState([]);
   const [showDialog, setShowDialog] = useState(false);
   const [selectedVideoId, setSelectedVideoId] = useState(null);
   const [isPlaying, setIsPlaying] = useState(false);
+  const [tooltipVisible, setTooltipVisible] = useState({}); // Estado para el tooltip individual
   const videoRef = useRef(null); // Referencia al elemento de video
 
   const fetchProyectos = async () => {
@@ -19,6 +23,12 @@ const ComponenteA = ({ proyectoID, updateCounter1, role }) => {
 
       if (Array.isArray(archivos)) {
         setProyectos(archivos);
+        // Inicializar el estado del tooltip para cada video
+        const tooltipState = archivos.reduce((acc, video) => {
+          acc[video.id] = false;
+          return acc;
+        }, {});
+        setTooltipVisible(tooltipState);
       } else {
         console.error("La respuesta de la API no es un array:", archivos);
         setProyectos([]);
@@ -53,6 +63,33 @@ const ComponenteA = ({ proyectoID, updateCounter1, role }) => {
     }
   };
 
+  const toggleTooltip = (id) => {
+    // Cambiar el estado del tooltip específico para el video con la ID proporcionada
+    setTooltipVisible((prevTooltipState) => ({
+      ...prevTooltipState,
+      [id]: !prevTooltipState[id],
+    }));
+  };
+
+  const closeTooltip = () => {
+    // Cerrar todos los tooltips al hacer clic en cualquier parte de la página
+    setTooltipVisible((prevTooltipState) => {
+      const closedTooltips = {};
+      Object.keys(prevTooltipState).forEach((key) => {
+        closedTooltips[key] = false;
+      });
+      return closedTooltips;
+    });
+  };
+
+  useEffect(() => {
+    // Cerrar el tooltip cuando se hace clic en cualquier parte de la página
+    document.addEventListener("click", closeTooltip);
+    return () => {
+      document.removeEventListener("click", closeTooltip);
+    };
+  }, []);
+
   useEffect(() => {
     fetchProyectos();
   }, [proyectoID, updateCounter1]);
@@ -68,12 +105,12 @@ const ComponenteA = ({ proyectoID, updateCounter1, role }) => {
         <p className="colorN">No hay videos disponibles</p>
       ) : (
         proyectos.map((pkP) => (
-          <div key={pkP.id} className="card">
+          <div key={pkP.id} className="card" style={{ position: "relative" }}>
             <video
               width="100%"
               height="auto"
               ref={videoRef}
-              controlsList="nodownload" 
+              controlsList="nodownload"
               controls
               muted // Silencio por defecto
               onPlay={() => playVideo(pkP.id)}
@@ -105,6 +142,32 @@ const ComponenteA = ({ proyectoID, updateCounter1, role }) => {
                 </Dropdown.Menu>
               </Dropdown>
             )}
+            <OverlayTrigger
+              show={tooltipVisible[pkP.id]}
+              placement="top"
+              overlay={
+                <Tooltip id={`tooltip-${pkP.id}`}>
+                  {pkP.name}
+                </Tooltip>
+              }
+            >
+              <img
+                src={info}
+                alt="Información"
+                style={{
+                  width: "25px",
+                  height: "25px",
+                  cursor: "pointer",
+                  position: "absolute",
+                  bottom: "263px",
+                  right: "293px",
+                }}
+                onClick={(e) => {
+                  e.stopPropagation(); // Evitar que el clic en el ícono cierre el tooltip
+                  toggleTooltip(pkP.id);
+                }}
+              />
+            </OverlayTrigger>
           </div>
         ))
       )}
