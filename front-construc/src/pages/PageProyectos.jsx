@@ -30,6 +30,7 @@ const PageProyectos = (props) => {
   const [selectedProjectId, setSelectedProjectId] = useState(null);
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
   const [errorArchivo, setErrorArchivo] = useState("");
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -76,6 +77,7 @@ const PageProyectos = (props) => {
 
   const handleGuardarProyecto = async () => {
     try {
+      setLoading(true);
       // Validar campos
       if (!nombreProyecto) {
         setErrorArchivo("Nombre Proyecto Vacío");
@@ -125,6 +127,9 @@ const PageProyectos = (props) => {
       }
     } catch (error) {
       console.error("Error en la solicitud POST:", error.message);
+    } finally {
+      setLoading(false); 
+
     }
   };
 
@@ -329,13 +334,13 @@ const PageProyectos = (props) => {
           </div>
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={handleCloseModal}>
-            Cerrar
-          </Button>
-          <Button variant="primary" onClick={handleGuardarProyecto}>
-            Guardar
-          </Button>
-        </Modal.Footer>
+        <Button variant="secondary" onClick={handleCloseModal} disabled={loading}>
+          Cerrar
+        </Button>
+        <Button variant="primary" onClick={handleGuardarProyecto} disabled={loading}>
+          {loading ? "Creando..." : "Guardar"}
+        </Button>
+      </Modal.Footer>
       </Modal>
     </>
   );

@@ -36,6 +36,7 @@ const AdminPage = () => {
   const role_id_fija = 2
   const [mostrarContrasena, setMostrarContrasena] = useState(false);
   const [errorContrasena, setErrorContrasena] = useState("");
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (!role || !usuario || !municipio) {
@@ -94,6 +95,7 @@ const AdminPage = () => {
 
   const handleGuardarMuni = async () => {
     try {
+      setLoading(true);
       setErrorArchivo("");
   
       if (!nombreMuni) {
@@ -121,6 +123,7 @@ const AdminPage = () => {
       if (response.status === 201) {
         setSuccessMessage("Se ha creado la municipalidad exitosamente.");
         setShowSuccessMessage(true);
+        setLoading(false);
         setArchivoProyecto(null);
         setErrorArchivo("");
         setMunicipalidades((prevMunicipalidades) => [
@@ -143,6 +146,7 @@ const AdminPage = () => {
 
   const handleGuardarUser = async () => {
     try {
+      setLoading(true);
       setErrorArchivouser(""); // Limpiar el error general
       setErrorContrasena(""); // Limpiar el error específico de la contraseña
   
@@ -179,6 +183,7 @@ const AdminPage = () => {
         setNombreUsuario("");
         setContrasenaUsuario("");
         setSelectedMunicipio("");
+        setLoading(false);
         handleCloseModal();
       } else {
         console.error("Error al crear el usuario. Estado de la respuesta:", response.status);
@@ -377,8 +382,9 @@ const AdminPage = () => {
                 variant="primary"
                 className="GuardarButtonRight mt-2"
                 onClick={handleGuardarMuni}
+                disabled={loading}
               >
-                Guardar
+                {loading ? "Creando Muni" : "Guardar"}
               </Button>
             </div>
           </div>
@@ -456,8 +462,9 @@ const AdminPage = () => {
                 variant="primary"
                 className="GuardarButtonRight mt-2"
                 onClick={handleGuardarUser}
+                disabled={loading}
               >
-                Guardar
+                {loading ? "Creando User" : "Guardar"}
               </Button>
             </div>
           </div>
