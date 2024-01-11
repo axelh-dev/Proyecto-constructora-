@@ -99,13 +99,11 @@ class Photos(models.Model):
 @receiver(models.signals.pre_delete, sender=Photos)
 def delete_Photos(sender, instance, **kwargs):
     try:
-        # Obtén el nombre del archivo desde la instancia
         file_name = str(instance.uploadedFile)
         
-        # Elimina el archivo de S3
         default_storage.delete(file_name)
     except Exception as e:
-     print(f"Error al eliminar el archivo para municipalidad {instance.munici_id}: {e}")
+        print(f"Error al eliminar el archivo para municipalidad {instance.munici_id}: {e}")
     
 class Videos(models.Model):
     id = models.BigAutoField(primary_key=True)
@@ -119,9 +117,8 @@ class Videos(models.Model):
 @receiver(models.signals.pre_delete, sender=Videos)
 def delete_Videos(sender, instance, **kwargs):
     try:
-        # Obtén el nombre del archivo desde la instancia
         file_name = str(instance.uploadedFile)
-        # Elimina el archivo de S3
+        
         default_storage.delete(file_name)
     except Exception as e:
         print(f"Error al eliminar el archivo para municipalidad {instance.munici_id}: {e}")
