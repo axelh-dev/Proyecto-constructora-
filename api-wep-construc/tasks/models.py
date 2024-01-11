@@ -2,6 +2,8 @@ from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin,BaseUserManager
 from django.db.models.signals import post_delete
 from django.dispatch import receiver
+from django.core.files.storage import default_storage
+from django.dispatch import receiver
 
 class AppUserManager(BaseUserManager):
     def create_user(self, username, password=None, **extra_fields):
@@ -29,13 +31,14 @@ class municipalidad(models.Model):
     def __str__(self):
         return f"User: {self.name}"
     
-@receiver(post_delete, sender=municipalidad)
+@receiver(models.signals.pre_delete, sender=municipalidad)
 def delete_municipalidad(sender, instance, **kwargs):
     try:
-        instance.uploadedFile.delete(False)
+        file_name = str(instance.uploadedFile)
+        
+        default_storage.delete(file_name)
     except Exception as e:
-        # Manejar la excepción según tus necesidades
-        print(f"Error al eliminar el archivo: {e}")
+        print(f"Error al eliminar el archivo para municipalidad {instance.munici_id}: {e}")
     
     
 class userrole(models.Model):
@@ -93,13 +96,16 @@ class Photos(models.Model):
     def __str__(self):
         return f"Photo: {self.name}"
     
-@receiver(post_delete, sender=Photos)
+@receiver(models.signals.pre_delete, sender=Photos)
 def delete_Photos(sender, instance, **kwargs):
     try:
-        instance.uploadedFile.delete(False)
+        # Obtén el nombre del archivo desde la instancia
+        file_name = str(instance.uploadedFile)
+        
+        # Elimina el archivo de S3
+        default_storage.delete(file_name)
     except Exception as e:
-        # Manejar la excepción según tus necesidades
-        print(f"Error al eliminar el archivo: {e}")
+     print(f"Error al eliminar el archivo para municipalidad {instance.munici_id}: {e}")
     
 class Videos(models.Model):
     id = models.BigAutoField(primary_key=True)
@@ -109,12 +115,14 @@ class Videos(models.Model):
 
     def __str__(self):
         return f"Video: {self.name}"
-
-@receiver(post_delete, sender=Videos)
+    
+@receiver(models.signals.pre_delete, sender=Videos)
 def delete_Videos(sender, instance, **kwargs):
     try:
-        instance.uploadedFile.delete(False)
+        # Obtén el nombre del archivo desde la instancia
+        file_name = str(instance.uploadedFile)
+        # Elimina el archivo de S3
+        default_storage.delete(file_name)
     except Exception as e:
-        # Manejar la excepción según tus necesidades
-        print(f"Error al eliminar el archivo: {e}")
+        print(f"Error al eliminar el archivo para municipalidad {instance.munici_id}: {e}")
     
