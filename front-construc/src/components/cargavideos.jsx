@@ -6,6 +6,7 @@ import info from "../assets/info-circle.svg";
 import DialogModal from "./msgExito";
 import OverlayTrigger from "react-bootstrap/OverlayTrigger";
 import Tooltip from "react-bootstrap/Tooltip";
+import "../Estilos/PageFYV.scss";
 
 const ComponenteA = ({ proyectoID, updateCounter1, role }) => {
   const [proyectos, setProyectos] = useState([]);
@@ -159,11 +160,11 @@ const ComponenteA = ({ proyectoID, updateCounter1, role }) => {
                   height: "25px",
                   cursor: "pointer",
                   position: "absolute",
-                  bottom: "263px",
-                  right: "293px",
+                  bottom: "89%", // Usa porcentajes relativos en lugar de píxeles
+                  right: "89%", // Usa porcentajes relativos en lugar de píxeles
                 }}
                 onClick={(e) => {
-                  e.stopPropagation(); // Evitar que el clic en el ícono cierre el tooltip
+                  e.stopPropagation();
                   toggleTooltip(pkP.id);
                 }}
               />
