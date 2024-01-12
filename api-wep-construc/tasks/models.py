@@ -1,9 +1,12 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin,BaseUserManager
-from django.db.models.signals import post_delete
 from django.dispatch import receiver
 from django.core.files.storage import default_storage
-from django.dispatch import receiver
+
+
+
+def upload_to(instance, filename):
+    return f'{instance.__class__.__name__.lower()}s/{filename}'
 
 class AppUserManager(BaseUserManager):
     def create_user(self, username, password=None, **extra_fields):
@@ -103,7 +106,7 @@ def delete_Photos(sender, instance, **kwargs):
         
         default_storage.delete(file_name)
     except Exception as e:
-        print(f"Error al eliminar el archivo para municipalidad {instance.munici_id}: {e}")
+        print(f"Error al eliminar el archivo para municipalidad {instance.id}: {e}")
     
 class Videos(models.Model):
     id = models.BigAutoField(primary_key=True)
@@ -121,5 +124,5 @@ def delete_Videos(sender, instance, **kwargs):
         
         default_storage.delete(file_name)
     except Exception as e:
-        print(f"Error al eliminar el archivo para municipalidad {instance.munici_id}: {e}")
+        print(f"Error al eliminar el archivo para municipalidad {instance.id}: {e}")
     
