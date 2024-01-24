@@ -18,6 +18,7 @@ const ComponenteB = ({ proyectoID, updateCounter, role }) => {
   const [showFullname, setShowFullname] = useState(false);
   const [showMoreImages, setShowMoreImages] = useState(false);
   const MAX_NAME_LENGTH = 60;
+  const MAX_NAME_LENGTH_1 = 10;
   const MAX_IMAGES_TO_SHOW = 5;
 
   const fetchProyectos = async () => {
@@ -25,6 +26,7 @@ const ComponenteB = ({ proyectoID, updateCounter, role }) => {
       const archivosEndpoint = `http://localhost:8000/api/proyectosfp/${proyectoID}`;
       const archivosResponse = await axios.get(archivosEndpoint);
       const archivos = archivosResponse.data;
+      console.log(archivos);
       if (Array.isArray(archivos)) {
         setProyectos(archivos);
       } else {
@@ -79,17 +81,29 @@ const ComponenteB = ({ proyectoID, updateCounter, role }) => {
         proyectos
           .slice(0, showMoreImages ? proyectos.length : MAX_IMAGES_TO_SHOW)
           .map((pkP) => (
-            <div key={pkP.id} className="card" style={{ position: "relative" }}>
-              <img
-                src={pkP.uploadedFile}
-                alt={pkP.name}
+            <div
+              key={pkP.id}
+              className="card-photos"
+              style={{ position: "relative" }}
+            >
+              <div
+                className="content-photos"
                 onClick={() => openModal(pkP.uploadedFile, pkP.name)}
-              />
+              >
+                <div className="container-img">
+                  <img src={pkP.uploadedFile} alt={pkP.name} />
+                </div>
+                <span className="">
+                  {pkP.name.length > MAX_NAME_LENGTH_1 
+                    ? `${pkP.name.substring(0, MAX_NAME_LENGTH_1)}...`
+                    : pkP.name}
+                </span>
+              </div>
+
               {role === "admin" && (
                 <Dropdown className="Dropdown-fotos">
                   <Dropdown.Toggle
                     className="dropdown-toggle"
-                    variant="light"
                     id="dropdown-basic"
                   >
                     <img
