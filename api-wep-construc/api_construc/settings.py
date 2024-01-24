@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 import os
 from pathlib import Path
+from decouple import config
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -169,9 +170,8 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 
 #s3access
-
-AWS_ACCESS_KEY_ID = 'AKIAUNGW4FNOFTMKQTPR'
-AWS_SECRET_ACCESS_KEY = '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'
+AWS_ACCESS_KEY_ID = config('AWS_ACCESS_KEY_ID')
+AWS_SECRET_ACCESS_KEY = config('AWS_SECRET_ACCESS_KEY')
 AWS_STORAGE_BUCKET_NAME = 'construc-bucket'
 AWS_S3_SIGNATURE_NAME = 's3v4'
 AWS_S3_DATE_OVERRIDE = 'X-Amz-Date'
